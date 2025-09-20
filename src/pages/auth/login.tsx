@@ -13,7 +13,11 @@ import { getErrorMessage } from "@/lib/errors";
 import { useState } from "react";
 import { Eye, EyeOff, Asterisk } from "lucide-react";
 
-const schema = z.object({ email: z.string().email(), password: z.string().min(6) });
+// Email and password (admin override uses a real email)
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6)
+});
 type Form = z.infer<typeof schema>;
 
 export default function Login() {
@@ -27,7 +31,8 @@ export default function Login() {
       const res = await apiLogin(v);
       dispatch(setAuth(res));
       toast.success("Welcome back!");
-      nav("/");
+      if (res.user.role === 'admin') nav('/admin');
+      else nav("/");
     } catch (e: unknown) {
       toast.error(getErrorMessage(e) ?? "Login failed");
     }

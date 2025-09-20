@@ -4,6 +4,7 @@ import { remove } from "@/features/cart/cartSlice";
 import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CoverImage from "@/components/cover-image";
 
 type Sel = Record<string, boolean>;
 
@@ -40,7 +41,7 @@ export default function Cart() {
           {items.map(i => (
             <li key={i.bookId} className="ds-card p-3 flex gap-3 items-center">
               <input type="checkbox" checked={!!sel[i.bookId]} onChange={() => toggle(i.bookId)} />
-              <img src={i.coverUrl ?? "/placeholder.svg"} className="w-12 h-16 object-cover rounded" />
+              <CoverImage src={i.coverUrl} alt={i.title} className="w-12 h-16 object-cover rounded" index={0} />
               <div className="flex-1">
                 <div className="font-medium">{i.title}</div>
                 <div className="text-sm text-muted-foreground">Qty: {i.qty}</div>

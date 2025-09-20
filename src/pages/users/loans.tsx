@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { clear } from "@/features/cart/cartSlice";
 import { toast } from "sonner";
 import { useState } from "react";
+import CoverImage from "@/components/cover-image";
 import { getErrorMessage } from "@/lib/errors";
 
 export default function Loans() {
@@ -94,10 +95,7 @@ export default function Loans() {
       <ul className="space-y-3">
         {list?.map((l) => (
           <li key={l.id} className="ds-card p-3 flex gap-3">
-            <img
-              src={l.book.coverUrl ?? "/placeholder.svg"}
-              className="w-12 h-16 object-cover rounded"
-            />
+            <CoverImage src={l.book.coverUrl} alt={l.book.title} className="w-12 h-16 object-cover rounded" />
             <div className="flex-1">
               <div className="font-medium">{l.book.title}</div>
               <div className="text-sm text-muted-foreground">

@@ -2,8 +2,11 @@ import axios from "axios";
 import { store } from "@/store";
 import { logout } from "@/features/auth/authSlice";
 
+const DEFAULT_BASE = "https://belibraryformentee-production.up.railway.app";
+const base = (import.meta.env.VITE_API_BASE as string | undefined) ?? DEFAULT_BASE;
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE + "/api",
+  baseURL: `${base}/api`,
   withCredentials: false,
 });
 

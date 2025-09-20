@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -124,54 +126,51 @@
 :root {
   color-scheme: light;
   /* Font */
-  --font-sans: Quicksand, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji";
-
+  --font-sans: Quicksand, ui-sans-serif, system-ui, -apple-system;
   
-  /* Core tokens (light) */
-  --background: #FFFFFF;
-  --foreground: var(--ds-neutral-900);
-  --card: #FFFFFF;
-  --card-foreground: var(--ds-neutral-900);
-  --popover: #FFFFFF;
-  --popover-foreground: var(--ds-neutral-900);
-  --primary: var(--ds-primary-500); /* brand */
+  /* Core tokens (light) mapped to custom palette */
+  --background: var(--color-base-white);
+  --foreground: var(--color-neutral-900);
+  --card: var(--color-base-white);
+  --card-foreground: var(--color-neutral-900);
+  --popover: var(--color-base-white);
+  --popover-foreground: var(--color-neutral-900);
+  --primary: var(--color-primary-300);
   --primary-foreground: #FFFFFF;
-  --secondary: var(--ds-neutral-100);
-  --secondary-foreground: var(--ds-neutral-900);
-  --muted: var(--ds-neutral-100);
-  --muted-foreground: var(--ds-neutral-600);
-  --accent: var(--ds-neutral-100);
-  --accent-foreground: var(--ds-neutral-900);
-  --destructive: var(--ds-red-500);
+  --secondary: var(--color-neutral-100);
+  --secondary-foreground: var(--color-neutral-900);
+  --muted: var(--color-neutral-100);
+  --muted-foreground: var(--color-neutral-600);
+  --accent: var(--color-neutral-100);
+  --accent-foreground: var(--color-neutral-900);
+  --destructive: var(--color-accent-red);
   --destructive-foreground: #FFFFFF;
-  --border: var(--ds-neutral-200);
-  --input: var(--ds-neutral-200);
-  --ring: var(--ds-primary-500);
-
-  
+  --border: var(--color-neutral-200);
+  --input: var(--color-neutral-200);
+  --ring: var(--color-primary-300);
 }
 
 .dark {
   color-scheme: dark;
-  --background: var(--ds-neutral-900);
+  --background: var(--color-neutral-900);
   --foreground: #FFFFFF;
-  --card: var(--ds-neutral-900);
+  --card: var(--color-neutral-900);
   --card-foreground: #FFFFFF;
-  --popover: var(--ds-neutral-900);
+  --popover: var(--color-neutral-900);
   --popover-foreground: #FFFFFF;
-  --primary: var(--ds-primary-400); /* brighter brand for dark */
+  --primary: var(--color-primary-300);
   --primary-foreground: #0B1220;
-  --secondary: var(--ds-neutral-800);
+  --secondary: var(--color-neutral-800);
   --secondary-foreground: #FFFFFF;
-  --muted: var(--ds-neutral-800);
-  --muted-foreground: var(--ds-neutral-400);
-  --accent: var(--ds-neutral-800);
+  --muted: var(--color-neutral-800);
+  --muted-foreground: var(--color-neutral-400);
+  --accent: var(--color-neutral-800);
   --accent-foreground: #FFFFFF;
-  --destructive: #B61B5B;
+  --destructive: var(--color-accent-red);
   --destructive-foreground: #FFFFFF;
-  --border: var(--ds-neutral-800);
-  --input: var(--ds-neutral-800);
-  --ring: var(--ds-primary-400);
+  --border: var(--color-neutral-800);
+  --input: var(--color-neutral-800);
+  --ring: var(--color-primary-300);
 }
 
 /* Map CSS variables to Tailwind v4 color tokens used by shadcn */
@@ -182,11 +181,17 @@
   html { font-family: var(--font-sans); }
   * { @apply border-border; }
   body { @apply bg-background text-foreground; }
+  button { cursor: pointer; }
 }
+
 
 /* Utilities in our DS */
 @layer utilities {
   .ds-card { @apply rounded-xl border bg-card text-card-foreground shadow-sm; }
   .ds-pill { @apply rounded-full bg-neutral-100 text-neutral-700 px-2.5 py-1 text-xs; }
   .ds-heading { @apply text-xl font-semibold; }
+}
+
+body {
+  font-family:'Quicksand', sans-serif;
 }

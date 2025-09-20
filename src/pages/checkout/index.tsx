@@ -3,11 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/store";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
+import CoverImage from "@/components/cover-image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { checkout } from "@/services/loans";
+import { borrowBook } from "@/services/loans";
 import { clear } from "@/features/cart/cartSlice";
 import { toast } from "sonner";
 import { useMemo, useState } from "react";
+import { isAxiosError } from "axios";
 import { getErrorMessage } from "@/lib/errors";
 
 export default function Checkout() {
@@ -26,15 +28,28 @@ export default function Checkout() {
   const returnDate = useMemo(() => borrowDate.add(days, "day"), [borrowDate, days]);
 
   const m = useMutation({
-    mutationFn: () => checkout({ items: items.map(i => ({ bookId: i.bookId, qty: i.qty })) }),
-    onMutate: () => { dispatch(clear()); },
+    mutationFn: async () => {
+      for (const it of items) {
+        // Post once per item; if qty>1, we repeat requests
+        const times = Math.max(1, it.qty);
+        for (let k = 0; k < times; k++) {
+          await borrowBook({ bookId: it.bookId, days });
+        }
+      }
+    },
     onSuccess: () => {
-      toast.success("Borrow request submitted");
+      dispatch(clear());
+      toast.success("Borrowed successfully");
       qc.invalidateQueries({ queryKey: ["loans"] });
-      nav("/me/loans");
+      nav("/success", { state: { returnDate: returnDate.format("D MMMM YYYY") } });
     },
     onError: (e: unknown) => {
-      toast.error(getErrorMessage(e) ?? "Checkout failed");
+      if (isAxiosError(e)) {
+        const code = e.response?.status;
+        if (code === 404) return toast.error("Book not found");
+        if (code === 400) return toast.error("No Available copies");
+      }
+      toast.error(getErrorMessage(e) ?? "Borrow failed");
     }
   });
 
@@ -57,7 +72,7 @@ export default function Checkout() {
           <ul className="space-y-2">
             {items.map(i => (
               <li key={i.bookId} className="flex items-center gap-3">
-                <img src={i.coverUrl ?? "/placeholder.svg"} className="w-12 h-16 object-cover rounded" />
+                <CoverImage src={i.coverUrl} alt={i.title} className="w-12 h-16 object-cover rounded" />
                 <div className="flex-1">
                   <div className="font-medium">{i.title}</div>
                   <div className="text-sm text-muted-foreground">Qty: {i.qty}</div>

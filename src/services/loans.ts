@@ -11,6 +11,12 @@ export async function checkout(payload: { items: { bookId: string; qty: number }
   const { data } = await api.post("/loans/checkout", payload);
   return data as { loanIds: string[] };
 }
+
+export async function borrowBook(payload: { bookId: string | number; days: number }) {
+  const body = { bookId: typeof payload.bookId === 'string' ? Number(payload.bookId) : payload.bookId, days: payload.days };
+  const { data } = await api.post("/loans", body);
+  return data as { success?: boolean };
+}
 export async function myLoans() {
   const { data } = await api.get("/loans/me");
   return data as Loan[];

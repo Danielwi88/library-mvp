@@ -1,0 +1,98 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { fetchAuthorBooks } from '../../services/authors';
+import ProductCard from '../../components/product-card'
+
+// Minimal local types to avoid implicit any and keep the page self-contained
+interface Author {
+  id: string | number;
+  name: string;
+  bio?: string | null;
+}
+
+interface BookAuthor { id?: string | number; name: string }
+
+interface Book {
+  id: string | number;
+  title: string;
+  author: BookAuthor;
+  coverUrl?: string | null;
+  rating?: number | null;
+}
+
+const AuthorBooksPage = () => {
+  const params = useParams<Record<string, string>>();
+  const idParam = params.authorId ?? params.id ?? "";
+  const [authorData, setAuthorData] = useState<Author | null>(null);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      if (!idParam) {
+        setError('Missing author id');
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await fetchAuthorBooks(idParam);
+        setAuthorData(data.author);
+        setBooks(data.items);
+      } catch (err) {
+        let message = 'Failed to fetch author books';
+        if (err && typeof err === 'object') {
+          const maybeResp = err as { response?: { data?: { message?: unknown } } };
+          const m = maybeResp.response?.data?.message;
+          if (typeof m === 'string') message = m;
+          else if (err instanceof Error) message = err.message;
+        }
+        setError(message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [idParam]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!authorData) {
+    return <div>{error ?? 'Author not found.'}</div>;
+  }
+
+  return (
+    <div className='container mx-auto py-8'>
+      <h1 className='text-2xl font-semibold mb-4'>
+        Books by {authorData.name}
+      </h1>
+      {authorData.bio && <p className='text-gray-600 mb-4'>{authorData.bio}</p>}
+
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        {books.map((book, index) => (
+          <ProductCard
+            key={book.id}
+            id={book.id}
+            title={book.title}
+            authorName={book.author.name}
+            authorId={book.author.id}
+            coverUrl={book.coverUrl}
+            rating={book.rating ?? undefined}
+            index={index}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default AuthorBooksPage;

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import BookList from "@/pages/books/list";
+import CategoriesPage from "@/pages/categories";
 import BookDetail from "@/pages/books/detail";
 import Loans from "@/pages/users/loans";
 import Profile from "@/pages/users/profile";
@@ -13,6 +14,8 @@ import Cart from "@/pages/cart";
 import Checkout from "@/pages/checkout";
 import AdminAddBook from "@/pages/admin/add-book";
 import Footer from "@/components/footer";
+import AuthorBooksPage from "@/pages/authors/[authorId]";
+import Success from "@/pages/success";
 
 
 export function Router() {
@@ -26,13 +29,16 @@ export function Router() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/books/:id" element={<BookDetail />} />
+            <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/me/loans" element={<RequireAuth><Loans /></RequireAuth>} />
             <Route path="/me/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/admin" element={<RequireAuth role="admin"><AdminDashboard /></RequireAuth>} />
-            <Route path="*" element={<NotFound />} />
             <Route path="/cart" element={<RequireAuth><Cart /></RequireAuth>} />
             <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
             <Route path="/admin/add-book" element={<RequireAuth role="admin"><AdminAddBook/></RequireAuth>} />
+            <Route path="/authors/:authorId" element={<AuthorBooksPage />} />
+            <Route path="/success" element={<RequireAuth><Success /></RequireAuth>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
         <Footer />
