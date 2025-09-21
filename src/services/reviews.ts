@@ -16,3 +16,8 @@ export async function upsertReview(bookId: string, payload: { rating: number; co
   const { data } = await api.put(`/books/${bookId}/reviews/me`, payload);
   return data as Review;
 }
+
+export async function submitReview(payload: { bookId: number; star: number; comment: string }) {
+  const { data } = await api.post("/reviews", payload);
+  return data;
+}

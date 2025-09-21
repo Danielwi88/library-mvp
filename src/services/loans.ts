@@ -1,10 +1,26 @@
 import { api } from "./api";
 export interface Loan {
-  id: string;
-  book: { id: string; title: string; coverUrl?: string | null };
+  id: number;
+  userId: number;
+  bookId: number;
   status: "BORROWED" | "RETURNED" | "OVERDUE";
-  dueDate: string;
-  createdAt: string;
+  borrowedAt: string;
+  dueAt: string;
+  returnedAt: string | null;
+  book: { 
+    id: number; 
+    title: string; 
+    coverImage: string;
+    author?: { name: string } 
+  };
+}
+
+export interface LoansResponse {
+  success: boolean;
+  message: string;
+  data: {
+    loans: Loan[];
+  };
 }
 
 export async function checkout(payload: { items: { bookId: string; qty: number }[] }) {
@@ -17,9 +33,10 @@ export async function borrowBook(payload: { bookId: string | number; days: numbe
   const { data } = await api.post("/loans", body);
   return data as { success?: boolean };
 }
+
 export async function myLoans() {
-  const { data } = await api.get("/loans/me");
-  return data as Loan[];
+  const { data } = await api.get("/loans/my");
+  return data?.data?.loans as Loan[] || [];
 }
 export async function adminLoans(params?: { status?: string }) {
   const { data } = await api.get("/admin/loans", { params });

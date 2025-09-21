@@ -1,21 +1,22 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Footer from "@/components/footer";
+import { Nav } from "@/components/nav";
+import AdminAddBook from "@/pages/admin/add-book";
+import AdminDashboard from "@/pages/admin/dashboard";
 import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
-import BookList from "@/pages/books/list";
-import CategoriesPage from "@/pages/categories";
+import AuthorBooksPage from "@/pages/authors/[authorId]";
 import BookDetail from "@/pages/books/detail";
+import BookList from "@/pages/books/list";
+import Cart from "@/pages/cart";
+import CategoriesPage from "@/pages/categories";
+import Checkout from "@/pages/checkout";
+import NotFound from "@/pages/not-found";
+import Success from "@/pages/success";
 import Loans from "@/pages/users/loans";
 import Profile from "@/pages/users/profile";
-import AdminDashboard from "@/pages/admin/dashboard";
-import NotFound from "@/pages/not-found";
+
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { RequireAuth } from "./guards";
-import { Nav } from "@/components/nav";
-import Cart from "@/pages/cart";
-import Checkout from "@/pages/checkout";
-import AdminAddBook from "@/pages/admin/add-book";
-import Footer from "@/components/footer";
-import AuthorBooksPage from "@/pages/authors/[authorId]";
-import Success from "@/pages/success";
 
 
 export function Router() {
@@ -30,8 +31,12 @@ export function Router() {
             <Route path="/register" element={<Register />} />
             <Route path="/books/:id" element={<BookDetail />} />
             <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/me/loans" element={<RequireAuth><Loans /></RequireAuth>} />
-            <Route path="/me/profile" element={<RequireAuth><Profile /></RequireAuth>} />
+            {/* User profile section */}
+            <Route path="/me">
+              <Route index element={<RequireAuth><Navigate to="/me/profile" replace /></RequireAuth>} />
+              <Route path="loans" element={<RequireAuth><Loans /></RequireAuth>} />
+              <Route path="profile" element={<RequireAuth><Profile /></RequireAuth>} />
+            </Route>
             <Route path="/admin" element={<RequireAuth role="admin"><AdminDashboard /></RequireAuth>} />
             <Route path="/cart" element={<RequireAuth><Cart /></RequireAuth>} />
             <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />

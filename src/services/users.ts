@@ -22,11 +22,38 @@ function unwrapAuthResponse(raw: unknown): { token: string; user: User } {
   return { token, user };
 }
 
+export interface ProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    profile: {
+      id: number;
+      name: string;
+      email: string;
+      role: string;
+      createdAt: string;
+    };
+    loanStats: {
+      borrowed: number;
+      late: number;
+      returned: number;
+      total: number;
+    };
+    reviewsCount: number;
+  };
+}
+
 export async function login(payload: { email: string; password: string }) {
   const { data } = await api.post("/auth/login", payload);
   const parsed = unwrapAuthResponse(data);
   return parsed;
 }
+
+export async function getMyProfile() {
+  const { data } = await api.get<ProfileResponse>("/me");
+  return data;
+}
+
 export async function register(payload: { name: string; email: string; phone?: string; password: string }) {
   const { data } = await api.post("/auth/register", payload);
   const parsed = unwrapAuthResponse(data);

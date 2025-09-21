@@ -1,122 +1,163 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { myLoans, checkout, type Loan } from "@/services/loans";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+import { myLoans, type Loan } from "@/services/loans";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
-import { clear } from "@/features/cart/cartSlice";
-import { toast } from "sonner";
 import { useState } from "react";
 import CoverImage from "@/components/cover-image";
-import { getErrorMessage } from "@/lib/errors";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProfileTab } from "@/components/profile-tab";
+import { ReviewsTab } from "@/components/reviews-tab";
+import { ReviewModal } from "@/components/review-modal";
 
 export default function Loans() {
-  const qc = useQueryClient();
-  const cart = useSelector((s: RootState) => s.cart.items);
-  const dispatch = useDispatch();
-  const q = useQuery({ queryKey: ["loans"], queryFn: myLoans });
+  const loansQuery = useQuery({ queryKey: ["loans"], queryFn: myLoans });
   
   // filters & search
-  const [status, setStatus] = useState<"" | "BORROWED" | "RETURNED" | "OVERDUE">("");
+  const [activeTab, setActiveTab] = useState<"all" | "active" | "returned" | "overdue">("all");
   const [search, setSearch] = useState("");
 
-  // client-side filter (can move to server later)
-  const list = ((qData: Loan[] | undefined) => {
-    let arr: Loan[] = qData ?? [];
-    if (status) arr = arr.filter((l) => l.status === status);
-    if (search) arr = arr.filter((l) => l.book.title.toLowerCase().includes(search.toLowerCase()));
-    return arr;
-  })(q.data);
-
-  const checkoutM = useMutation({
-    mutationFn: () => checkout({ items: cart.map(c => ({ bookId: c.bookId, qty: c.qty })) }),
-    onMutate: async () => {
-      dispatch(clear()); // optimistic: clear cart now
-    },
-    onSuccess: () => {
-      toast.success("Checkout success");
-      qc.invalidateQueries({ queryKey: ["loans"] });
-    },
-    onError: (e: unknown) => {
-      toast.error(getErrorMessage(e) ?? "Checkout failed");
+  // client-side filter
+  const filteredLoans = ((loans: Loan[] | undefined) => {
+    if (!loans) return [];
+    
+    let filtered = [...loans];
+    
+    // Apply status filter
+    if (activeTab === "active") {
+      filtered = filtered.filter(loan => loan.status === "BORROWED");
+    } else if (activeTab === "returned") {
+      filtered = filtered.filter(loan => loan.status === "RETURNED");
+    } else if (activeTab === "overdue") {
+      filtered = filtered.filter(loan => loan.status === "OVERDUE");
     }
-  });
+    
+    // Apply search filter
+    if (search) {
+      filtered = filtered.filter(loan => 
+        loan.book.title.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  })(loansQuery.data);
+
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case "BORROWED": return "text-blue-600";
+      case "RETURNED": return "text-green-600";
+      case "OVERDUE": return "text-red-600";
+      default: return "";
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return dayjs(dateString).format("DD MMMM YYYY");
+  };
+
+  // No longer needed as this is moved to ProfileTab component
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-xl font-semibold">My Borrowed List</h1>
-
-      {cart.length > 0 && (
-        <div className="flex items-center gap-2">
-          <Button onClick={() => checkoutM.mutate()} disabled={checkoutM.isPending}>
-            Checkout {cart.length} item(s)
-          </Button>
-        </div>
-      )}
-
-      <div className="flex flex-wrap items-center gap-2">
-        <input
-          className="h-10 px-3 py-2 border rounded-md"
-          placeholder="Search book"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <div className="flex items-center gap-1 text-sm">
-          <button
-            className={`ds-pill ${!status && "bg-primary text-primary-foreground"}`}
-            onClick={() => setStatus("")}
-          >
-            All
-          </button>
-          <button
-            className={`ds-pill ${status === "BORROWED" && "bg-primary text-primary-foreground"}`}
-            onClick={() => setStatus("BORROWED")}
-          >
-            Active
-          </button>
-          <button
-            className={`ds-pill ${status === "RETURNED" && "bg-primary text-primary-foreground"}`}
-            onClick={() => setStatus("RETURNED")}
-          >
-            Returned
-          </button>
-          <button
-            className={`ds-pill ${status === "OVERDUE" && "bg-primary text-primary-foreground"}`}
-            onClick={() => setStatus("OVERDUE")}
-          >
-            Overdue
-          </button>
-        </div>
-      </div>
-
-      {q.isLoading && <p>Loading...</p>}
-      {q.error && <p className="text-red-500">Failed to load</p>}
-
-      <ul className="space-y-3">
-        {list?.map((l) => (
-          <li key={l.id} className="ds-card p-3 flex gap-3">
-            <CoverImage src={l.book.coverUrl} alt={l.book.title} className="w-12 h-16 object-cover rounded" />
-            <div className="flex-1">
-              <div className="font-medium">{l.book.title}</div>
-              <div className="text-sm text-muted-foreground">
-                Status:{" "}
-                <span
-                  className={
-                    l.status === "RETURNED"
-                      ? "text-green-600"
-                      : l.status === "OVERDUE"
-                      ? "text-red-600"
-                      : "text-primary"
-                  }
-                >
-                  {l.status}
-                </span>
-                {" · "}Due: {dayjs(l.dueDate).format("D MMM YYYY")}
-              </div>
+    <div className="max-w-3xl mx-auto">
+      <div className="mb-6">
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsTrigger value="profile" className="font-medium">Profile</TabsTrigger>
+            <TabsTrigger value="borrowed">Borrowed List</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="profile">
+            <ProfileTab />
+          </TabsContent>
+          
+          <TabsContent value="reviews">
+            <ReviewsTab />
+          </TabsContent>
+          
+          <TabsContent value="borrowed" className="space-y-4">
+            <h1 className="text-xl font-semibold">Borrowed List</h1>
+            
+            <div className="mb-4">
+              <Input
+                placeholder="Search book"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full"
+              />
             </div>
-          </li>
-        ))}
-      </ul>
+            
+            <div className="flex space-x-2 mb-4">
+              <button
+                className={`px-4 py-1 rounded-full text-sm ${activeTab === "all" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+                onClick={() => setActiveTab("all")}
+              >
+                All
+              </button>
+              <button
+                className={`px-4 py-1 rounded-full text-sm ${activeTab === "active" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+                onClick={() => setActiveTab("active")}
+              >
+                Active
+              </button>
+              <button
+                className={`px-4 py-1 rounded-full text-sm ${activeTab === "returned" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+                onClick={() => setActiveTab("returned")}
+              >
+                Returned
+              </button>
+              <button
+                className={`px-4 py-1 rounded-full text-sm ${activeTab === "overdue" ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+                onClick={() => setActiveTab("overdue")}
+              >
+                Overdue
+              </button>
+            </div>
+            
+            {loansQuery.isLoading && <p>Loading...</p>}
+            {loansQuery.error && <p className="text-red-500">Failed to load</p>}
+            
+            <div className="space-y-6">
+              {filteredLoans.map((loan) => (
+                <div key={loan.id} className="border rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="text-sm font-medium">Status: <span className={getStatusClass(loan.status)}>{loan.status === "BORROWED" ? "Active" : loan.status === "RETURNED" ? "Returned" : "Overdue"}</span></div>
+                    <div className="text-sm">Due Date: <span className="text-red-500 font-medium">{formatDate(loan.dueAt)}</span></div>
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    <CoverImage 
+                      src={loan.book.coverImage} 
+                      alt={loan.book.title} 
+                      className="w-16 h-24 object-cover rounded"
+                    />
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-500">Category</div>
+                      <div className="font-medium">{loan.book.title}</div>
+                      <div className="text-sm text-gray-500">Author name</div>
+                      <div className="text-sm">{dayjs(loan.borrowedAt).format("DD MMM YYYY")} · Duration: 3 Days</div>
+                    </div>
+                    <div className="flex items-end">
+                      <ReviewModal loan={loan} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {filteredLoans.length > 3 && (
+                <div className="flex justify-center">
+                  <Button variant="outline" className="w-full max-w-xs">Load More</Button>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="reviews" className="space-y-4">
+            <h1 className="text-xl font-semibold">Reviews</h1>
+            <p className="text-gray-500">You haven't written any reviews yet.</p>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
