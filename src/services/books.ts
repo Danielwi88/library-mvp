@@ -11,13 +11,12 @@ export interface Book {
   description?: string;
 }
 
-// The backend returns: { success, message, data: { books: [...], pagination } }
-// Map that payload into our UI-friendly shape.
+
 export async function fetchBooks(params: { q?: string; categoryIds?: string[]; page?: number; limit?: number; }) {
   const query: Record<string, unknown> = {};
   if (params?.page) query.page = params.page;
   if (params?.limit) query.limit = params.limit;
-  // If backend later supports search, forward it as `q` safely.
+  
   if (params?.q) query.q = params.q;
 
   const { data } = await api.get("/books", { params: query });
@@ -110,7 +109,6 @@ export async function fetchBooksByAuthor(authorId: string) {
 }
 
 export async function adminCreateBook(payload: FormData | Record<string, unknown>) {
-  // if uploading cover, prefer FormData
-  const { data } = await api.post("/admin/books", payload);
-  return data as Book;
+  const { data } = await api.post("/books", payload);
+  return data;
 }

@@ -17,7 +17,16 @@ export async function upsertReview(bookId: string, payload: { rating: number; co
   return data as Review;
 }
 
-export async function submitReview(payload: { bookId: number; star: number; comment: string }) {
-  const { data } = await api.post("/reviews", payload);
+export async function submitReview(payload: { bookId: number; rating: number; comment: string }) {
+  const { data } = await api.post("/reviews", {
+    bookId: payload.bookId,
+    star: payload.rating,
+    comment: payload.comment
+  });
+  return data;
+}
+
+export async function getUserReviews(page = 1, limit = 20) {
+  const { data } = await api.get(`/me/reviews?page=${page}&limit=${limit}`);
   return data;
 }

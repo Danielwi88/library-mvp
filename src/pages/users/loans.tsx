@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { myLoans, type Loan } from "@/services/loans";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import CoverImage from "@/components/cover-image";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,11 +12,21 @@ import { ReviewsTab } from "@/components/reviews-tab";
 import { ReviewModal } from "@/components/review-modal";
 
 export default function Loans() {
+  const [searchParams] = useSearchParams();
   const loansQuery = useQuery({ queryKey: ["loans"], queryFn: myLoans });
+  
+  // Get tab from URL params, default to profile
+  const tabFromUrl = searchParams.get('tab') || 'profile';
+  const [currentTab, setCurrentTab] = useState(tabFromUrl);
   
   // filters & search
   const [activeTab, setActiveTab] = useState<"all" | "active" | "returned" | "overdue">("all");
   const [search, setSearch] = useState("");
+  
+  useEffect(() => {
+    const tab = searchParams.get('tab') || 'profile';
+    setCurrentTab(tab);
+  }, [searchParams]);
 
   // client-side filter
   const filteredLoans = ((loans: Loan[] | undefined) => {
@@ -60,7 +71,7 @@ export default function Loans() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-6">
-        <Tabs defaultValue="profile" className="w-full">
+        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="profile" className="font-medium">Profile</TabsTrigger>
             <TabsTrigger value="borrowed">Borrowed List</TabsTrigger>

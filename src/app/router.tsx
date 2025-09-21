@@ -2,6 +2,8 @@ import Footer from "@/components/footer";
 import { Nav } from "@/components/nav";
 import AdminAddBook from "@/pages/admin/add-book";
 import AdminDashboard from "@/pages/admin/dashboard";
+import BookPreview from "@/pages/admin/book-preview";
+import EditBook from "@/pages/admin/edit-book";
 import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import AuthorBooksPage from "@/pages/authors/[authorId]";
@@ -37,10 +39,12 @@ export function Router() {
               <Route path="loans" element={<RequireAuth><Loans /></RequireAuth>} />
               <Route path="profile" element={<RequireAuth><Profile /></RequireAuth>} />
             </Route>
-            <Route path="/admin" element={<RequireAuth role="admin"><AdminDashboard /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAuth role="ADMIN"><AdminDashboard /></RequireAuth>} />
+            <Route path="/admin/book/:id" element={<RequireAuth role="ADMIN"><BookPreview /></RequireAuth>} />
+            <Route path="/admin/book/:id/edit" element={<RequireAuth role="ADMIN"><EditBook /></RequireAuth>} />
             <Route path="/cart" element={<RequireAuth><Cart /></RequireAuth>} />
             <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
-            <Route path="/admin/add-book" element={<RequireAuth role="admin"><AdminAddBook/></RequireAuth>} />
+            <Route path="/admin/add-book" element={<RequireAuth role="ADMIN"><AdminAddBook/></RequireAuth>} />
             <Route path="/authors/:authorId" element={<AuthorBooksPage />} />
             <Route path="/success" element={<RequireAuth><Success /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
+import { getUserReviews } from "@/services/reviews";
 
 // Types
 interface Review {
   id: number;
   bookId: number;
   userId: number;
-  rating: number;
+  star: number;
   comment: string;
   createdAt: string;
   book: {
@@ -33,27 +34,7 @@ interface ReviewsResponse {
   };
 }
 
-// API function to fetch reviews
-const fetchReviews = async (page = 1, limit = 20): Promise<ReviewsResponse> => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No authentication token found");
-  
-  const response = await fetch(
-    `https://belibraryformentee-production.up.railway.app/api/me/reviews?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "accept": "*/*"
-      }
-    }
-  );
-  
-  if (!response.ok) {
-    throw new Error("Failed to fetch reviews");
-  }
-  
-  return response.json();
-};
+
 
 export function ReviewsTab() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,11 +43,11 @@ export function ReviewsTab() {
   // Fetch reviews
   const { data, isLoading, error } = useQuery({
     queryKey: ["reviews", currentPage],
-    queryFn: () => fetchReviews(currentPage)
+    queryFn: () => getUserReviews(currentPage)
   });
   
   // Filter reviews based on search term
-  const filteredReviews = data?.data.reviews.filter(review => 
+  const filteredReviews = data?.data?.reviews?.filter((review: Review) => 
     review.book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     review.book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
     review.comment.toLowerCase().includes(searchTerm.toLowerCase())
@@ -175,7 +156,7 @@ export function ReviewsTab() {
                   <div className="text-sm text-gray-500 mb-2">
                     {review.book.author}
                   </div>
-                  {renderStars(review.rating)}
+                  {renderStars(review.star)}
                   <p className="mt-2 text-sm text-gray-700">
                     {review.comment}
                   </p>

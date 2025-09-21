@@ -17,6 +17,34 @@ export interface AdminOverview {
   generatedAt?: string;
 }
 
+export interface OverdueLoan {
+  id: number;
+  userId: number;
+  bookId: number;
+  status: string;
+  borrowedAt: string;
+  dueAt: string;
+  returnedAt: string | null;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  book: {
+    id: number;
+    title: string;
+    author: {
+      id: number;
+      name: string;
+    };
+  };
+}
+
+export async function getOverdueLoans(page = 1, limit = 20) {
+  const { data } = await api.get(`/admin/loans/overdue?page=${page}&limit=${limit}`);
+  return data.data;
+}
+
 export async function getAdminOverview(): Promise<AdminOverview> {
   const { data } = await api.get("/admin/overview");
   const d = data?.data ?? {} as Record<string, unknown>;

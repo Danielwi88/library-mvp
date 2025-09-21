@@ -1,34 +1,67 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchBookDetail } from "@/services/books";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { adminCreateBook } from "@/services/books";
-import { createAuthor } from "@/services/authors";
-
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "@/lib/errors";
-import { ArrowLeft, Upload, Plus, X } from "lucide-react";
+import { ArrowLeft, Upload, X, Plus } from "lucide-react";
+import { api } from "@/services/api";
+import { isAxiosError } from "axios";
 
-export default function AdminAddBook() {
+interface BookDetail {
+  title?: string;
+  description?: string;
+  isbn?: string;
+  publishedYear?: number;
+  authorId?: number | string;
+  categoryId?: number | string;
+  totalCopies?: number;
+  coverUrl?: string | null;
+  coverImage?: string | null;
+  author?: { id: number | string; name?: string };
+  categories?: { id: number | string; name?: string }[];
+}
+
+interface BookDetailResponse {
+  book: BookDetail;
+  reviews: unknown[];
+}
+
+interface UpdateBookPayload {
+  title: string;
+  description: string;
+  isbn: string;
+  publishedYear: number;
+  coverImage: string;
+  authorId: number;
+  categoryId: number;
+  totalCopies: number;
+  availableCopies: number;
+}
+
+export default function EditBook() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isbn, setIsbn] = useState("");
   const [publishedYear, setPublishedYear] = useState<number | ''>('');
-  const [pages, setPages] = useState<number | ''>('');
   const [authorId, setAuthorId] = useState("");
+  const [authorName, setAuthorName] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [totalCopies, setTotalCopies] = useState<number | ''>(1);
-  const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  
-  // Author modal state
-  const [authorModalOpen, setAuthorModalOpen] = useState(false);
-  const [authorName, setAuthorName] = useState("");
+  const [isAuthorModalOpen, setIsAuthorModalOpen] = useState(false);
+  const [newAuthorName, setNewAuthorName] = useState("");
   const [authorBio, setAuthorBio] = useState("");
-  const [authorErrors, setAuthorErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const categories = [
     { id: 1, name: "Science" },
@@ -38,17 +71,87 @@ export default function AdminAddBook() {
     { id: 11, name: "Non-Fiction" },
     { id: 14, name: "Education" }
   ];
-  const nav = useNavigate();
+
+  const { data, isLoading } = useQuery<BookDetailResponse>({
+    queryKey: ["book-detail", id],
+    queryFn: async (): Promise<BookDetailResponse> => await fetchBookDetail(id!),
+    enabled: !!id
+  });
+
+  const updateBookMutation = useMutation({
+    mutationFn: async (payload: UpdateBookPayload) => {
+      try {
+        const { data } = await api.put(`/books/${id}`, payload);
+        return data;
+      } catch (error: unknown) {
+        if (
+          isAxiosError(error) &&
+          error.response?.status === 409 &&
+          typeof error.response?.data?.message === 'string' &&
+          error.response.data.message.includes('ISBN')
+        ) {
+          const { data } = await api.put(`/books/${id}`, { ...payload, forceUpdate: true });
+          return data;
+        }
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Book updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["book-detail", id] });
+      queryClient.invalidateQueries({ queryKey: ["admin-books"] });
+      navigate("/admin");
+    },
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error) ?? "Failed to update book");
+    }
+  });
+
+  const createAuthorMutation = useMutation({
+    mutationFn: async (authorData: { name: string; bio: string }) => {
+      const { data } = await api.post('/authors', authorData);
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success("Author created successfully");
+      setAuthorId(String(data.data.id));
+      setAuthorName(data.data.name);
+      setIsAuthorModalOpen(false);
+      setNewAuthorName("");
+      setAuthorBio("");
+    },
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error) ?? "Failed to create author");
+    }
+  });
+
+
+
+  useEffect(() => {
+    if (data?.book) {
+      const book = data.book;
+      setTitle(book.title || "");
+      setDescription(book.description || "");
+      setIsbn(book.isbn || "");
+      setPublishedYear(book.publishedYear || "");
+      const authorIdValue = String(book.authorId || book.author?.id || "");
+      setAuthorId(authorIdValue);
+      setAuthorName(book.author?.name || "");
+      const categoryIdValue = String(book.categoryId || book.categories?.[0]?.id || "");
+      setCategoryId(categoryIdValue);
+      setTotalCopies(book.totalCopies || 1);
+      setImagePreview(book.coverUrl || book.coverImage || null);
+    }
+  }, [data]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!title.trim()) newErrors.title = "Text is required";
-    if (!description.trim()) newErrors.description = "Text is required";
+    if (!title.trim()) newErrors.title = "Title is required";
+    if (!description.trim()) newErrors.description = "Description is required";
     if (!isbn.trim()) newErrors.isbn = "ISBN is required";
     if (!publishedYear) newErrors.publishedYear = "Published year is required";
-    if (!pages) newErrors.pages = "Text is required";
-    if (!authorId) newErrors.authorId = "Text is required";
-    if (!categoryId) newErrors.categoryId = "Text is required";
+    if (!authorId) newErrors.authorId = "Author is required";
+    if (!categoryId) newErrors.categoryId = "Category is required";
     if (!totalCopies) newErrors.totalCopies = "Total copies is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,7 +178,6 @@ export default function AdminAddBook() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] ?? null;
-    setFile(selectedFile);
     
     if (selectedFile) {
       if (selectedFile.size > 5 * 1024 * 1024) {
@@ -85,75 +187,46 @@ export default function AdminAddBook() {
       
       const compressedImage = await compressImage(selectedFile);
       setImagePreview(compressedImage);
-    } else {
-      setImagePreview(null);
     }
   };
 
-  const validateAuthor = () => {
-    const newErrors: Record<string, string> = {};
-    if (!authorName.trim()) newErrors.name = "Author name is required";
-    if (!authorBio.trim()) newErrors.bio = "Author bio is required";
-    setAuthorErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-
-
-  const createNewAuthor = async () => {
-    if (!validateAuthor()) return;
-    
-    try {
-      const author = await createAuthor({ name: authorName, bio: authorBio });
-      setAuthorId(String(author.id));
-      setAuthorModalOpen(false);
-      setAuthorName("");
-      setAuthorBio("");
-      setAuthorErrors({});
-      toast.success(`Author "${author.name}" created successfully`);
-    } catch (e: unknown) {
-      toast.error(getErrorMessage(e) ?? "Failed to create author");
+  const handleCreateAuthor = () => {
+    if (!newAuthorName.trim()) {
+      toast.error("Author name is required");
+      return;
     }
+    createAuthorMutation.mutate({ name: newAuthorName, bio: authorBio });
   };
 
-  const save = async () => {
+
+
+  const handleSave = () => {
     if (!validate()) return;
     
-    try {
-      const payload = {
-        title,
-        description,
-        isbn,
-        publishedYear: Number(publishedYear),
-        coverImage: imagePreview || "",
-        authorId: Number(authorId),
-        categoryId: Number(categoryId),
-        totalCopies: Number(totalCopies),
-        availableCopies: Number(totalCopies)
-      };
-      
-      await adminCreateBook(payload);
-      toast.success("Book created successfully");
-      nav("/admin");
-    } catch (e: unknown) {
-      const errorMsg = getErrorMessage(e);
-      if (errorMsg?.includes('401')) {
-        toast.error("Unauthorized - Please login again");
-      } else if (errorMsg?.includes('403')) {
-        toast.error("Forbidden - You don't have permission");
-      } else {
-        toast.error(errorMsg ?? "Failed to create book");
-      }
-    }
+    const payload = {
+      title: title.trim(),
+      description: description.trim(),
+      isbn: isbn.trim(),
+      publishedYear: Number(publishedYear) || 2024,
+      coverImage: imagePreview || "",
+      authorId: Number(authorId),
+      categoryId: Number(categoryId),
+      totalCopies: Number(totalCopies) || 1,
+      availableCopies: Number(totalCopies) || 1
+    };
+    
+    updateBookMutation.mutate(payload);
   };
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="max-w-lg mx-auto p-6">
       <div className="flex items-center gap-3 mb-8">
-        <button onClick={() => nav("/admin")} className="p-1 hover:bg-gray-100 rounded">
+        <button onClick={() => navigate("/admin")} className="p-1 hover:bg-gray-100 rounded">
           <ArrowLeft className="size-5" />
         </button>
-        <h1 className="text-xl font-semibold">Add Book</h1>
+        <h1 className="text-xl font-semibold">Edit Book</h1>
       </div>
       
       <div className="space-y-6">
@@ -169,49 +242,69 @@ export default function AdminAddBook() {
         </div>
         
         <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">ISBN</label>
+          <Input 
+            placeholder="Enter book ISBN"
+            value={isbn} 
+            onChange={(e) => setIsbn(e.target.value)}
+            className={`h-12 ${errors.isbn ? "border-red-500" : ""}`}
+          />
+          {errors.isbn && <p className="text-red-500 text-xs mt-1">{errors.isbn}</p>}
+        </div>
+        
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Author</label>
           <div className="flex gap-2">
             <Input 
-              type="number"
-              placeholder="Enter author ID"
-              value={authorId}
-              onChange={(e) => setAuthorId(e.target.value)}
-              className={`h-12 flex-1 ${errors.authorId ? "border-red-500" : ""}`}
+              placeholder="Author name will appear here"
+              value={authorName}
+              readOnly
+              className={`h-12 flex-1 bg-gray-50 ${errors.authorId ? "border-red-500" : ""}`}
             />
-            <Dialog open={authorModalOpen} onOpenChange={setAuthorModalOpen}>
+            <Dialog open={isAuthorModalOpen} onOpenChange={setIsAuthorModalOpen}>
               <DialogTrigger asChild>
-                <Button type="button" variant="outline" className="h-12 px-3">
+                <Button variant="outline" className="h-12 px-3">
                   <Plus className="size-4" />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-md">
+              <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Create New Author</DialogTitle>
+                  <DialogTitle>Add New Author</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                     <Input 
                       placeholder="Enter author name"
-                      value={authorName}
-                      onChange={(e) => setAuthorName(e.target.value)}
-                      className={authorErrors.name ? "border-red-500" : ""}
+                      value={newAuthorName}
+                      onChange={(e) => setNewAuthorName(e.target.value)}
                     />
-                    {authorErrors.name && <p className="text-red-500 text-xs mt-1">{authorErrors.name}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bio (Detailed)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
                     <Textarea 
-                      placeholder="Enter detailed author biography, background, achievements, and notable works..."
+                      placeholder="Enter author bio"
                       value={authorBio}
                       onChange={(e) => setAuthorBio(e.target.value)}
-                      className={`min-h-32 ${authorErrors.bio ? "border-red-500" : ""}`}
+                      className="min-h-20 resize-none"
                     />
-                    {authorErrors.bio && <p className="text-red-500 text-xs mt-1">{authorErrors.bio}</p>}
                   </div>
-                  <Button onClick={createNewAuthor} className="w-full">
-                    Create Author
-                  </Button>
+                  <div className="flex gap-2 pt-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setIsAuthorModalOpen(false)}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={handleCreateAuthor}
+                      disabled={createAuthorMutation.isPending}
+                      className="flex-1"
+                    >
+                      {createAuthorMutation.isPending ? 'Creating...' : 'Create'}
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -237,38 +330,15 @@ export default function AdminAddBook() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">ISBN</label>
-          <Input 
-            placeholder="Enter ISBN"
-            value={isbn}
-            onChange={(e) => setIsbn(e.target.value)}
-            className={`h-12 ${errors.isbn ? "border-red-500" : ""}`}
-          />
-          {errors.isbn && <p className="text-red-500 text-xs mt-1">{errors.isbn}</p>}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Published Year</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Number of Pages</label>
           <Input 
             type="number"
-            placeholder="Enter published year"
+            placeholder="Enter number of pages"
             value={publishedYear}
             onChange={(e) => setPublishedYear(e.target.value ? Number(e.target.value) : '')}
             className={`h-12 ${errors.publishedYear ? "border-red-500" : ""}`}
           />
           {errors.publishedYear && <p className="text-red-500 text-xs mt-1">{errors.publishedYear}</p>}
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Number of Pages</label>
-          <Input 
-            type="number" 
-            placeholder="Enter number of pages"
-            value={pages} 
-            onChange={(e) => setPages(e.target.value ? Number(e.target.value) : '')}
-            className={`h-12 ${errors.pages ? "border-red-500" : ""}`}
-          />
-          {errors.pages && <p className="text-red-500 text-xs mt-1">{errors.pages}</p>}
         </div>
         
         <div>
@@ -304,10 +374,7 @@ export default function AdminAddBook() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => {
-                      setFile(null);
-                      setImagePreview(null);
-                    }}
+                    onClick={() => setImagePreview(null)}
                     className="text-red-600 flex-1 sm:flex-none"
                   >
                     <X className="size-4 mr-2" />
@@ -338,22 +405,13 @@ export default function AdminAddBook() {
             />
           </div>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Total Copies</label>
-          <Input 
-            type="number"
-            min={1}
-            placeholder="Enter total copies"
-            value={totalCopies}
-            onChange={(e) => setTotalCopies(e.target.value ? Number(e.target.value) : '')}
-            className={`h-12 ${errors.totalCopies ? "border-red-500" : ""}`}
-          />
-          {errors.totalCopies && <p className="text-red-500 text-xs mt-1">{errors.totalCopies}</p>}
-        </div>
         
-        <Button onClick={save} className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
-          Save
+        <Button 
+          onClick={handleSave} 
+          disabled={updateBookMutation.isPending}
+          className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
+        >
+          {updateBookMutation.isPending ? 'Saving...' : 'Save'}
         </Button>
       </div>
     </div>

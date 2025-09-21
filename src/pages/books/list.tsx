@@ -10,6 +10,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCategories } from "@/features/ui/uiSlice";
 import { useNavigate, Link } from "react-router-dom";
 
+// style helper for hiding horizontal scrollbar in webkit
+const NoScrollbar = () => (
+  <style>{`.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}`}</style>
+);
+
 export default function BookList() {
   const { search } = useSelector((s: RootState) => s.ui);
   const [page, setPage] = useState(1);
@@ -28,6 +33,7 @@ export default function BookList() {
 
   return (
     <div className="space-y-8">
+      <NoScrollbar />
       {/* Hero banner */}
       <div className="relative rounded-2xl overflow-hidden">
         <img
@@ -103,29 +109,68 @@ function HomeCategories({ onClick }: { onClick: (id: string) => void }) {
   const iconFor = (name: string) => {
     const map: Record<string, ElementType> = {
       'Fiction': BookOpen,
-      'Business': PiggyBank,
-      'Sci-Fi': FlaskConical,
-      'Self-Help': Brain,
-      'Education': GraduationCap,
       'Non-Fiction': BookMarked,
-      'Technology': GraduationCap,
+      'Self Improvement': Brain,
+      'Finance': PiggyBank,
+      'Science': FlaskConical,
+      'Education': GraduationCap,
     };
     return map[name] ?? BookOpen;
   };
   const cats = (q.data ?? []) as Category[];
+  const fallback: Pick<Category,'id'|'name'>[] = [
+    { id: 1, name: 'Fiction' },
+    { id: 2, name: 'Non-Fiction' },
+    { id: 3, name: 'Self-Improvement' },
+    { id: 4, name: 'Finance' },
+    { id: 5, name: 'Science' },
+    { id: 6, name: 'Education' },
+  ];
+  const items = cats.length ? cats : fallback;
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-      {cats.map((c)=>{
-        const Icon = iconFor(c.name);
-        return (
-          <button key={c.id} onClick={()=>onClick(c.id)} className="text-left rounded-2xl border bg-white p-3 hover:shadow-sm">
-            <div className="h-14 rounded-xl bg-[var(--color-primary-200,#D2E3FF)] grid place-items-center mb-2">
-              <Icon className="size-6 text-primary" />
+    <div className="space-y-3">
+      <h3 className="text-lg font-semibold">Categories</h3>
+
+      {/* Loading state */}
+      {q.isLoading && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-2xl border bg-white p-4 animate-pulse">
+              <div className="h-14 rounded-xl bg-blue-100/70 mb-2" />
+              <div className="h-3 w-24 bg-neutral-200 rounded" />
             </div>
-            <div className="text-sm">{c.name}</div>
-          </button>
-        );
-      })}
+          ))}
+        </div>
+      )}
+
+      {/* Error message (still show fallback cards) */}
+      {q.error && (
+        <p className="text-sm text-red-500">Failed to load categories — showing defaults.</p>
+      )}
+
+      {/* Cards (API or fallback) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {items.map((c) => {
+          const Icon = iconFor(c.name);
+          return (
+            <button
+              key={String(c.id)}
+              onClick={() => onClick(String(c.id))}
+              className="text-left rounded-2xl border bg-white p-4 shadow-[0_6px_14px_rgba(20,30,55,0.06)] hover:shadow-[0_10px_20px_rgba(20,30,55,0.08)] transition-shadow"
+            >
+              <div className="h-14 rounded-xl bg-blue-100 grid place-items-center mb-2">
+                <Icon className="size-7 text-blue-600" />
+              </div>
+              <div className="text-sm font-medium text-neutral-900 leading-snug">{c.name}</div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Empty hint if API loaded but had no categories */}
+      {!q.isLoading && !q.error && cats.length === 0 && (
+        <p className="text-sm text-muted-foreground">No categories from the API yet. Using placeholders.</p>
+      )}
     </div>
   );
 }

@@ -23,7 +23,9 @@ export function ReviewModal({ loan }: ReviewModalProps) {
       setOpen(false);
       setRating(0);
       setComment("");
+      // Invalidate both loans and reviews queries to refresh the data
       queryClient.invalidateQueries({ queryKey: ["loans"] });
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
     },
     onError: (error) => {
       console.error('Failed to submit review:', error);
@@ -64,10 +66,10 @@ export function ReviewModal({ loan }: ReviewModalProps) {
             className="w-full" 
             onClick={() => {
               if (rating > 0) {
-                console.log('Submitting review:', { bookId: loan.bookId, star: rating, comment });
+                console.log('Submitting review:', { bookId: loan.bookId, rating: rating, comment });
                 reviewMutation.mutate({
                   bookId: loan.bookId,
-                  star: rating,
+                  rating: rating,
                   comment: comment || ""
                 });
               }
