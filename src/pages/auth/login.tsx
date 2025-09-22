@@ -77,20 +77,22 @@ export default function Login() {
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" className="h-10 rounded-lg" aria-invalid={!!errors.email} {...register("email")} />
-          <p className={`text-xs mt-1 ${errors.email ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.email?.message ?? "Text Helper"}
-          </p>
+          <Label htmlFor="email" className="font-bold pb-2 text-sm">Email</Label>
+          <Input id="email" className="text-md font-semibold mt-1 h-10 rounded-xl" aria-invalid={!!errors.email} {...register("email")} />
+          {errors.email && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.email.message}
+            </p>
+          )}
         </div>
         <div>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password" className="font-bold pb-2" >Password</Label>
           <div className="relative">
             <Input
               id="password"
               type={showPwd ? "text" : "password"}
               aria-invalid={!!errors.password}
-              className="h-10 rounded-lg"
+              className="text-md font-normal h-10 rounded-lg"
               {...register("password")}
             />
             <button
@@ -102,13 +104,15 @@ export default function Login() {
               {showPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
-          <p className={`text-xs mt-1 ${errors.password ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.password?.message ?? "Text Helper"}
-          </p>
+          {errors.password && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.password.message}
+            </p>
+          )}
         </div>
-        <Button disabled={isSubmitting} className="w-full rounded-full h-12 ">Login</Button>
+        <Button disabled={isSubmitting} className="w-full rounded-full h-12 text-md font-bold">Login</Button>
       </form>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm sm:text-md font-semibold text-center">
         Don&apos;t have an account? <Link to="/register" className="text-primary-300">Register</Link>
       </p>
     </div>

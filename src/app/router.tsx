@@ -26,7 +26,7 @@ export function Router() {
     <BrowserRouter>
       <div className="min-h-dvh flex flex-col">
         <Nav />
-        <div className="container mx-auto max-w-6xl px-3 py-4 flex-1">
+        <div className="container mx-auto max-w-[1200px] px-3 sm:px-0 py-4 sm:py-12 flex-1">
           <Routes>
             <Route path="/" element={<BookList />} />
             <Route path="/login" element={<Login />} />

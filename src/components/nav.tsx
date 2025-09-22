@@ -1,20 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '@/store';
-import { Button } from '@/components/ui/button';
-import { logout } from '@/features/auth/authSlice';
-import { Input } from '@/components/ui/input';
-import { setSearch } from '@/features/ui/uiSlice';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ThemeToggle from '@/components/theme-toggle';
-import {
-  Menu as MenuIcon,
-  Search as SearchIcon,
-  ShoppingCart,
-  ChevronDown,
-  LogOut,
-  X as CloseIcon,
-} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,14 +8,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { logout } from '@/features/auth/authSlice';
+import { setSearch } from '@/features/ui/uiSlice';
+import type { RootState } from '@/store';
+import {
+  ChevronDown,
+  X as CloseIcon,
+  LogOut,
+  Menu as MenuIcon,
+  Search as SearchIcon,
+} from 'lucide-react';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 function BookyMark({
-  className = 'size-6 text-primary',
+  className = 'size-10 sm:size-[42px] text-primary',
 }: {
   className?: string;
 }) {
-  // Starburst mark used as the Booky brand icon
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -72,27 +70,29 @@ export function Nav() {
   const [mobileSearch, setMobileSearch] = useState(false);
 
   return (
-    <header className='sticky top-0 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 border-b'>
-      <div className='container mx-auto max-w-6xl px-3 py-3 flex items-center gap-3'>
+    <header className='sticky top-0 h-16 sm:h-20 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)]'>
+      <div className='container mx-auto max-w-[1200px] px-3 flex items-center gap-3'>
         {/* Left: brand */}
         <Link
           to='/'
-          className='flex items-center gap-2 font-semibold text-lg text-foreground'
+          className='flex items-center gap-[15px] font-semibold text-lg text-foreground'
         >
-          <BookyMark className='size-6 sm:size-7 text-primary' />
-          <span className='hidden xs:inline text-lg font-extrabold'>Booky</span>
+          <BookyMark />
+          <span className='hidden xm:inline text-display-md font-bold'>
+            Booky
+          </span>
         </Link>
 
         {/* Center: search (desktop, after login) */}
         {user && (
           <div className='hidden md:block flex-1 max-w-xl mx-auto'>
             <div className='relative'>
-              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-600' />
+              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-6 sm:size-5 text-neutral-950 sm:text-neutral-600' />
               <Input
                 placeholder='Search book'
                 value={search}
                 onChange={(e) => dispatch(setSearch(e.target.value))}
-                className='h-10 rounded-full pl-9 pr-4'
+                className='h-10 rounded-full border border-neutral-300  pl-9 pr-4 font-medium text-sm'
               />
             </div>
           </div>
@@ -108,83 +108,77 @@ export function Nav() {
           >
             <SearchIcon className='size-4' />
           </button>
+
+          {/* Desktop theme toggle */}
+          <div className='block'>
+            <ThemeToggle />
+          </div>
           <Link
             to='/cart'
             className='relative p-2 rounded-md border md:border-transparent text-foreground'
           >
-            <ShoppingCart className='size-5' />
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='24'
+              height='27'
+              viewBox='0 0 24 27'
+              fill='none'
+              className='size-8'
+              
+            >
+              <path
+                d='M6.6665 7.66667V6.33333C6.6665 4.91885 7.22841 3.56229 8.2286 2.5621C9.22879 1.5619 10.5853 1 11.9998 1C13.4143 1 14.7709 1.5619 15.7711 2.5621C16.7713 3.56229 17.3332 4.91885 17.3332 6.33333V7.66667'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+                fill='none'
+              />
+              <path
+                fillRule='evenodd'
+                clipRule='evenodd'
+                d='M0.781333 7.11336C-7.94729e-08 7.8947 0 9.1507 0 11.6654V15.6654C0 20.6934 -1.58946e-07 23.208 1.56267 24.7694C3.12533 26.3307 5.63867 26.332 10.6667 26.332H13.3333C18.3613 26.332 20.876 26.332 22.4373 24.7694C23.9987 23.2067 24 20.6934 24 15.6654V11.6654C24 9.1507 24 7.8947 23.2187 7.11336C22.4373 6.33203 21.1813 6.33203 18.6667 6.33203H5.33333C2.81867 6.33203 1.56267 6.33203 0.781333 7.11336ZM9.33333 12.9987C9.33333 12.6451 9.19286 12.3059 8.94281 12.0559C8.69276 11.8058 8.35362 11.6654 8 11.6654C7.64638 11.6654 7.30724 11.8058 7.05719 12.0559C6.80714 12.3059 6.66667 12.6451 6.66667 12.9987V15.6654C6.66667 16.019 6.80714 16.3581 7.05719 16.6082C7.30724 16.8582 7.64638 16.9987 8 16.9987C8.35362 16.9987 8.69276 16.8582 8.94281 16.6082C9.19286 16.3581 9.33333 16.019 9.33333 15.6654V12.9987ZM17.3333 12.9987C17.3333 12.6451 17.1929 12.3059 16.9428 12.0559C16.6928 11.8058 16.3536 11.6654 16 11.6654C15.6464 11.6654 15.3072 11.8058 15.0572 12.0559C14.8071 12.3059 14.6667 12.6451 14.6667 12.9987V15.6654C14.6667 16.019 14.8071 16.3581 15.0572 16.6082C15.3072 16.8582 15.6464 16.9987 16 16.9987C16.3536 16.9987 16.6928 16.8582 16.9428 16.6082C17.1929 16.3581 17.3333 16.019 17.3333 15.6654V12.9987Z'
+                fill='currentColor'
+              />
+            </svg>
+            
+            {/* <img src="/Bag.png" alt="bag" width='28' height='28' className='sm:w-8 sm:h-8 z-10 hidden ' /> */}
             {cartCount > 0 && (
-              <span className='absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[var(--color-accent-red,#D9206E)] text-white text-[10px] font-bold leading-4 text-center'>
+              <span className='absolute z-50 top-1 right-0.5 min-w-5 h-5 px-1 rounded-full bg-[var(--color-accent-red,#D9206E)] text-white text-xs font-bold leading-5 text-center'>
                 {cartCount}
               </span>
             )}
           </Link>
-
-          {/* Desktop theme toggle */}
-          <div className='hidden md:block'>
-            <ThemeToggle />
-          </div>
 
           {user ? (
             <div className='flex items-center gap-2'>
               {/* Desktop: avatar with menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className='hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-full border bg-white/80'>
-                    <Avatar className='size-7'>
+                  <button className='flex items-center gap-2 px-2.5 py-1.5  bg-white/80 dark:bg-transparent'>
+                    <Avatar className='size-10 sm:size-12'>
                       <AvatarImage src={'/avatarfall.png'} alt={user.name} />
                       <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <span className='text-sm'>{user.name}</span>
-                    <ChevronDown className='size-4 opacity-60' />
+                    <span className='text-lg font-semibold hidden sm:block'>
+                      {user.name}
+                    </span>
+                    <ChevronDown className='size-6 font-semibold hidden sm:block' />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuItem onClick={() => nav('/me/loans?tab=profile')}>
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/me/loans?tab=borrowed')}>
-                    Borrowed List
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/me/loans?tab=reviews')}>
-                    Reviews
-                  </DropdownMenuItem>
-                  {user.role === 'ADMIN' && (
-                    <DropdownMenuItem onClick={() => nav('/admin')}>
-                      Admin Dashboard
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
+                <DropdownMenuContent align='end' className='w-[200px] py-4'>
                   <DropdownMenuItem
-                    onClick={() => dispatch(logout())}
-                    className='text-destructive'
+                    onClick={() => nav('/me/loans?tab=profile')}
                   >
-                    <LogOut className='size-4 mr-2' /> Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Mobile: hamburger menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className='md:hidden p-2 rounded-md border'
-                    aria-label='Menu'
-                  >
-                    <MenuIcon className='size-5' />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuItem onClick={() => nav('/')}>
-                    Home
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/me/loans?tab=profile')}>
                     Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/me/loans?tab=borrowed')}>
+                  <DropdownMenuItem
+                    onClick={() => nav('/me/loans?tab=borrowed')}
+                  >
                     Borrowed List
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/me/loans?tab=reviews')}>
+                  <DropdownMenuItem
+                    onClick={() => nav('/me/loans?tab=reviews')}
+                  >
                     Reviews
                   </DropdownMenuItem>
                   {user.role === 'ADMIN' && (

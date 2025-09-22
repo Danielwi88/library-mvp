@@ -83,34 +83,40 @@ export default function Register() {
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" className="h-10 rounded-lg" aria-invalid={!!errors.name} {...register("name")} />
-          <p className={`text-xs mt-1 ${errors.name ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.name?.message ?? "Text Helper"}
-          </p>
+          <Label htmlFor="name" className="font-bold pb-2 text-sm">Name</Label>
+          <Input id="name" className="text-md font-semibold mt-1 h-10 rounded-xl" aria-invalid={!!errors.name} {...register("name")} />
+          {errors.name && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.name.message}
+            </p>
+          )}
         </div>
         <div>
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" className="h-10 rounded-lg" aria-invalid={!!errors.email} {...register("email")} />
-          <p className={`text-xs mt-1 ${errors.email ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.email?.message ?? "Text Helper"}
-          </p>
+          <Label htmlFor="email" className="font-bold pb-1 text-sm">Email</Label>
+          <Input id="email" className="text-md font-semibold mt-1 h-10 rounded-xl" aria-invalid={!!errors.email} {...register("email")} />
+          {errors.email && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.email.message}
+            </p>
+          )}
         </div>
         <div>
-          <Label htmlFor="phone">Nomor Handphone</Label>
-          <Input id="phone" className="h-10 rounded-lg" aria-invalid={!!errors.phone} {...register("phone")} />
-          <p className={`text-xs mt-1 ${errors.phone ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.phone?.message ?? "Text Helper"}
-          </p>
+          <Label htmlFor="phone" className="font-bold pb-1 text-sm">Nomor Handphone</Label>
+          <Input id="phone" className="text-md font-semibold mt-1 h-10 rounded-xl" aria-invalid={!!errors.phone} {...register("phone")} />
+          {errors.phone && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.phone.message}
+            </p>
+          )}
         </div>
         <div>
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
+          <Label htmlFor="password" className="font-bold pb-1 text-sm">Password</Label>
+          <div className="relative text-md font-semibold mt-1 h-10 rounded-xl">
             <Input
               id="password"
               type={showPwd ? "text" : "password"}
               aria-invalid={!!errors.password}
-              className="h-10 rounded-lg"
+              className="text-md font-semibold mt-1 h-10 rounded-xl"
               {...register("password")}
             />
             <button
@@ -122,18 +128,20 @@ export default function Register() {
               {showPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
-          <p className={`text-xs mt-1 ${errors.password ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.password?.message ?? "Text Helper"}
-          </p>
+          {errors.password && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.password.message}
+            </p>
+          )}
         </div>
         <div>
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Label htmlFor="confirmPassword" className="font-bold pb-1 text-sm">Confirm Password</Label>
           <div className="relative">
             <Input
               id="confirmPassword"
               type={showConfirmPwd ? "text" : "password"}
               aria-invalid={!!errors.confirmPassword}
-              className="h-10 rounded-lg"
+              className="text-md font-semibold mt-1 h-10 rounded-xl"
               {...register("confirmPassword")}
             />
             <button
@@ -145,13 +153,15 @@ export default function Register() {
               {showConfirmPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
-          <p className={`text-xs mt-1 ${errors.confirmPassword ? "text-destructive" : "text-muted-foreground"}`}>
-            {errors.confirmPassword?.message ?? "Text Helper"}
-          </p>
+          {errors.confirmPassword && (
+            <p className="text-xs mt-1 text-destructive">
+              {errors.confirmPassword.message}
+            </p>
+          )}
         </div>
-        <Button disabled={isSubmitting} className="w-full rounded-full h-12">Submit</Button>
+        <Button disabled={isSubmitting} className="w-full rounded-full h-12 text-md font-bold">Submit</Button>
       </form>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm sm:text-md font-semibold text-center">
         Already have an account? <Link to="/login" className="text-primary-300">Log In</Link>
       </p>
     </div>

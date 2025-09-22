@@ -7,8 +7,6 @@
   --breakpoint-xs: 360px;
   --breakpoint-xm: 480px;
 
-
- 
   --font-family: 'Quicksand', sans-serif;
 
   /* Font Weights */
@@ -157,6 +155,7 @@
   --border: var(--color-neutral-200);
   --input: var(--color-neutral-200);
   --ring: var(--color-primary-300);
+  --input-bg: #FFFFFF;
 }
 
 .dark {
@@ -180,6 +179,7 @@
   --border: var(--color-neutral-800);
   --input: var(--color-neutral-800);
   --ring: var(--color-primary-300);
+  --input-bg: rgba(65, 70, 81, 0.3);
 }
 
 /* Map CSS variables to Tailwind v4 color tokens used by shadcn */
