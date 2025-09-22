@@ -41,7 +41,7 @@ export function ReviewsTab() {
   const [currentPage] = useState(1);
   
   // Fetch reviews
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<ReviewsResponse>({
     queryKey: ["reviews", currentPage],
     queryFn: () => getUserReviews(currentPage)
   });
@@ -135,7 +135,7 @@ export function ReviewsTab() {
         </div>
       ) : (
         <div className="space-y-6">
-          {filteredReviews.map((review) => (
+          {filteredReviews.map((review: Review) => (
             <div key={review.id} className="border rounded-lg p-4">
               <div className="flex items-start gap-4">
                 <img 

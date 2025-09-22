@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getOverdueLoans, type OverdueLoan } from "@/services/admin";
 import { fetchBooks } from "@/services/books";
+import { getUsers } from "@/services/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -121,6 +122,18 @@ function BorrowedListTab() {
 function UserTab() {
   const [search, setSearch] = useState("");
   
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-users"],
+    queryFn: () => getUsers()
+  });
+  
+  const users = data?.items || [];
+  const filteredUsers = users.filter(user => 
+    search === "" || 
+    user.name.toLowerCase().includes(search.toLowerCase()) ||
+    user.email.toLowerCase().includes(search.toLowerCase())
+  );
+  
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">User</h1>
@@ -132,30 +145,50 @@ function UserTab() {
         className="max-w-md"
       />
       
-      <div className="border rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-medium">No</th>
-              <th className="px-4 py-3 text-left text-sm font-medium">Name</th>
-              <th className="px-4 py-3 text-left text-sm font-medium">Nomor Handphone</th>
-              <th className="px-4 py-3 text-left text-sm font-medium">Email</th>
-              <th className="px-4 py-3 text-left text-sm font-medium">Created at</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <tr key={i} className="border-t">
-                <td className="px-4 py-3">{i}</td>
-                <td className="px-4 py-3">John Doe</td>
-                <td className="px-4 py-3">08123456789</td>
-                <td className="px-4 py-3">johndoe@email.com</td>
-                <td className="px-4 py-3">28 Aug 2025, 14:00</td>
+      {isLoading ? (
+        <p>Loading users...</p>
+      ) : (
+        <div className="border rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-3 text-left text-sm font-medium">No</th>
+                <th className="px-4 py-3 text-left text-sm font-medium">Name</th>
+                <th className="px-4 py-3 text-left text-sm font-medium">Email</th>
+                <th className="px-4 py-3 text-left text-sm font-medium">Role</th>
+                <th className="px-4 py-3 text-left text-sm font-medium">Created at</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                    No users found
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user, index) => (
+                  <tr key={user.id} className="border-t">
+                    <td className="px-4 py-3">{index + 1}</td>
+                    <td className="px-4 py-3">{user.name}</td>
+                    <td className="px-4 py-3">{user.email}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        user.role === 'ADMIN' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {user.createdAt ? dayjs(user.createdAt).format("DD MMM YYYY, HH:mm") : '-'}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

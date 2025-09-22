@@ -33,6 +33,7 @@ export interface OverdueLoan {
   book: {
     id: number;
     title: string;
+    coverUrl?: string;
     author: {
       id: number;
       name: string;
@@ -43,6 +44,29 @@ export interface OverdueLoan {
 export async function getOverdueLoans(page = 1, limit = 20) {
   const { data } = await api.get(`/admin/loans/overdue?page=${page}&limit=${limit}`);
   return data.data;
+}
+
+export async function getUsers() {
+  const data = await getOverdueLoans(1, 20);
+  const loans = data?.overdue || [];
+  
+  const usersMap = new Map();
+  loans.forEach((loan: OverdueLoan) => {
+    if (!usersMap.has(loan.user.id)) {
+      usersMap.set(loan.user.id, {
+        id: loan.user.id,
+        name: loan.user.name,
+        email: loan.user.email,
+        role: loan.user.id === 1 ? 'ADMIN' : 'USER',
+        createdAt: loan.borrowedAt
+      });
+    }
+  });
+  
+  return {
+    items: Array.from(usersMap.values()),
+    total: usersMap.size
+  };
 }
 
 export async function getAdminOverview(): Promise<AdminOverview> {

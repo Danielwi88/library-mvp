@@ -17,7 +17,7 @@ function unwrapAuthResponse(raw: unknown): { token: string; user: User } {
   const token = typeof tokenCandidate === "string" ? tokenCandidate : "";
 
   const userCandidate = (inner["user"] ?? inner["profile"]) as unknown;
-  const user = (isRecord(userCandidate) ? (userCandidate as unknown as User) : ({ id: "", name: "", email: "", role: "user" as const }));
+  const user = (isRecord(userCandidate) ? (userCandidate as unknown as User) : ({ id: "", name: "", email: "", role: "USER" as const }));
 
   return { token, user };
 }
@@ -63,7 +63,15 @@ export async function updateProfile(p: Partial<Pick<User, "name" | "phone">>) {
   const { data } = await api.patch("/users/me", p);
   return data as User;
 }
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  createdAt?: string;
+}
+
 export async function adminUsers(params?: { q?: string; page?: number }) {
   const { data } = await api.get("/admin/users", { params });
-  return data as { items: User[]; total: number };
+  return data as { items: AdminUser[]; total: number };
 }

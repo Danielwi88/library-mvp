@@ -1,11 +1,10 @@
-import React from 'react';
 import ProductCard from "@/components/product-card";
-import { fetchBooks, type Book } from "@/services/books";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/store";
 import { toggleCategory } from "@/features/ui/uiSlice";
+import { fetchBooks } from "@/services/books";
+import type { RootState } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 
 const CATEGORY_FILTER_OPTIONS = [
   { id: 1, name: "Science" },
@@ -55,20 +54,19 @@ export default function CategoriesPage() {
   const books = useMemo(() => booksQ.data?.items ?? [], [booksQ.data]);
 
   const filteredBooks = useMemo(() => {
-    if (selectedCategoryIds.length === 0 && selectedRatingIds.length === 0) return books;
+    if (selectedCategoryIds.length === 0 && selectedRatingIds.length === 0) {
+      return books;
+    }
 
-    const categorySet = new Set(selectedCategoryIds);
-    const ratingSet = new Set(selectedRatingIds);
-
-    const matchesCategory = (book: Book, categorySet: Set<string>) =>
-      categorySet.size === 0 || book.categories?.some(category => categorySet.has(String(category.id)));
-
-    const matchesRating = (book: Book, ratingSet: Set<number>) => {
-      const bookRating = Math.round(book.rating ?? 0);
-      return ratingSet.size === 0 || ratingSet.has(bookRating);
-    };
-
-    return books.filter(book => matchesCategory(book, categorySet) && matchesRating(book, ratingSet));
+    return books.filter(book => {
+      const categoryMatch = selectedCategoryIds.length === 0 || 
+        book.categories?.some(cat => selectedCategoryIds.includes(String(cat.id)));
+      
+      const ratingMatch = selectedRatingIds.length === 0 || 
+        selectedRatingIds.includes(Math.round(book.rating ?? 0));
+      
+      return categoryMatch && ratingMatch;
+    });
   }, [books, selectedCategoryIds, selectedRatingIds]);
 
   const handleRatingToggle = useCallback((rating: number) => {
