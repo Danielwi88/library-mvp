@@ -1,24 +1,35 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Music2 as Tiktok } from 'lucide-react';
 
-function BookyMark({ className = 'size-6 text-primary' }: { className?: string }) {
+function BookyMark({
+  className = 'size-[40px] sm:size-[42px] text-primary',
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 42 42"
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 42 42'
       className={className}
-      fill="none"
+      fill='none'
       aria-hidden
     >
-      <mask id="booky_mask_footer" style={{ maskType: 'luminance' }} maskUnits="userSpaceOnUse" x="0" y="0" width="42" height="42">
-        <path d="M42 0H0V42H42V0Z" fill="white" />
+      <mask
+        id='booky_mask_footer'
+        style={{ maskType: 'luminance' }}
+        maskUnits='userSpaceOnUse'
+        x='0'
+        y='0'
+        width='42'
+        height='42'
+      >
+        <path d='M42 0H0V42H42V0Z' fill='white' />
       </mask>
-      <g mask="url(#booky_mask_footer)">
+      <g mask='url(#booky_mask_footer)'>
         <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M22.5 0H19.5V13.2832L14.524 0.967222L11.7425 2.09104L16.8474 14.726L7.21142 5.09009L5.09011 7.21142L14.3257 16.447L2.35706 11.2178L1.15596 13.9669L13.8202 19.5H0V22.5H13.8202L1.15597 28.0331L2.35706 30.7822L14.3257 25.553L5.09011 34.7886L7.21142 36.9098L16.8474 27.274L11.7425 39.909L14.524 41.0327L19.5 28.7169V42H22.5V28.7169L27.476 41.0327L30.2574 39.909L25.1528 27.274L34.7886 36.9098L36.9098 34.7886L27.6742 25.553L39.643 30.7822L40.8439 28.0331L28.1799 22.5H42V19.5H28.1797L40.8439 13.9669L39.643 11.2178L27.6742 16.447L36.9098 7.2114L34.7886 5.09009L25.1528 14.726L30.2574 2.09104L27.476 0.967222L22.5 13.2832V0Z"
-          fill="currentColor"
+          fillRule='evenodd'
+          clipRule='evenodd'
+          d='M22.5 0H19.5V13.2832L14.524 0.967222L11.7425 2.09104L16.8474 14.726L7.21142 5.09009L5.09011 7.21142L14.3257 16.447L2.35706 11.2178L1.15596 13.9669L13.8202 19.5H0V22.5H13.8202L1.15597 28.0331L2.35706 30.7822L14.3257 25.553L5.09011 34.7886L7.21142 36.9098L16.8474 27.274L11.7425 39.909L14.524 41.0327L19.5 28.7169V42H22.5V28.7169L27.476 41.0327L30.2574 39.909L25.1528 27.274L34.7886 36.9098L36.9098 34.7886L27.6742 25.553L39.643 30.7822L40.8439 28.0331L28.1799 22.5H42V19.5H28.1797L40.8439 13.9669L39.643 11.2178L27.6742 16.447L36.9098 7.2114L34.7886 5.09009L25.1528 14.726L30.2574 2.09104L27.476 0.967222L22.5 13.2832V0Z'
+          fill='currentColor'
         />
       </g>
     </svg>
@@ -27,31 +38,109 @@ function BookyMark({ className = 'size-6 text-primary' }: { className?: string }
 
 export default function Footer() {
   return (
-    <footer className="border-t mt-16 bg-white">
-      <div className="container mx-auto max-w-6xl px-3 py-10 sm:py-14 text-center">
-        <Link to="/" className="inline-flex items-center gap-2 justify-center font-semibold">
-          <BookyMark className="size-6 sm:size-7 text-primary" />
-          <span className="text-lg font-extrabold">Booky</span>
+    <footer className='border-t mt-16 bg-background'>
+      <div className='container mx-auto max-w-6xl px-3 py-10 sm:py-14 text-center'>
+        <Link
+          to='/'
+          className='inline-flex items-center gap-2 justify-center font-semibold'
+        >
+          <BookyMark className='size-[40px] sm:size-[42px] text-primary' />
+          <span className='text-display-md leading-[42px] text-neutral-950 font-bold  dark:text-foreground'>
+            Booky
+          </span>
         </Link>
-        <p className="mt-3 text-sm text-neutral-700 max-w-2xl mx-auto">
-          Discover inspiring stories & timeless knowledge, ready to borrow anytime. Explore online or visit our nearest library branch.
+        <p className='mt-4 sm:mt-[22px] text-sm sm:text-md font-medium text-neutral-950 lg:max-w-[1200px] mx-auto dark:text-foreground'>
+          Discover inspiring stories & timeless knowledge, ready to borrow
+          anytime. Explore online or visit our nearest library branch.
         </p>
-        <p className="mt-6 text-sm text-neutral-600">Follow on Social Media</p>
-        <div className="mt-3 flex items-center justify-center gap-3 text-neutral-700">
-          <a href="#" aria-label="Facebook" className="size-9 grid place-items-center rounded-full border hover:bg-neutral-50">
-            <Facebook className="size-4" />
+        <p className='mt-4 sm:mt-10 text-sm sm:text-md font-medium text-neutral-950 lg:max-w-[1200px] mx-auto dark:text-foreground'>
+          Follow on Social Media
+        </p>
+        <div className='mt-5 flex items-center justify-center gap-3'>
+          <a
+            href='#'
+            aria-label='Facebook'
+            className='size-10 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-500 hover:bg-neutral-50'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='12'
+              height='21'
+              viewBox='0 0 12 21'
+              fill='currentColor'
+              stroke='currentColor'
+            >
+              <path
+                className=''
+                fill='currentColor'
+                d='M10.8936 11.3023L11.4635 7.68118H7.9528V5.32748C7.9528 4.33734 8.44293 3.36984 10.0102 3.36984H11.6288V0.28626C10.6862 0.135952 9.73377 0.0546359 8.77918 0.0429688C5.88969 0.0429687 4.00325 1.77996 4.00325 4.92011V7.68118H0.800293V11.3023H4.00325V20.0607H7.9528V11.3023H10.8936Z'
+              />
+            </svg>
           </a>
-          <a href="#" aria-label="Instagram" className="size-9 grid place-items-center rounded-full border hover:bg-neutral-50">
-            <Instagram className="size-4" />
+          <a
+            href='#'
+            aria-label='Instagram'
+            className='size-10 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-500 hover:bg-neutral-50'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='21'
+              height='21'
+              viewBox='0 0 21 21'
+              fill='none'
+              stroke='currentColor'
+            >
+              <path
+                className=''
+                fill='currentColor'
+                d='M6.6712 10.0514C6.6712 8.20885 8.16402 6.71481 10.006 6.71481C11.848 6.71481 13.3416 8.20885 13.3416 10.0514C13.3416 11.8939 11.848 13.3879 10.006 13.3879C8.16402 13.3879 6.6712 11.8939 6.6712 10.0514ZM4.86804 10.0514C4.86804 12.8899 7.1683 15.1908 10.006 15.1908C12.8437 15.1908 15.144 12.8899 15.144 10.0514C15.144 7.21285 12.8437 4.91193 10.006 4.91193C7.1683 4.91193 4.86804 7.21285 4.86804 10.0514ZM14.1466 4.70814C14.1465 4.94569 14.2169 5.17793 14.3487 5.3755C14.4806 5.57307 14.6681 5.72709 14.8874 5.81808C15.1068 5.90908 15.3482 5.93296 15.5811 5.88671C15.8141 5.84046 16.0281 5.72615 16.1961 5.55825C16.3641 5.39034 16.4785 5.17638 16.5249 4.94341C16.5713 4.71045 16.5477 4.46894 16.4569 4.24944C16.3661 4.02994 16.2123 3.84229 16.0148 3.71024C15.8174 3.57819 15.5853 3.50765 15.3478 3.50756H15.3474C15.029 3.50771 14.7238 3.63423 14.4987 3.85934C14.2735 4.08444 14.1469 4.38973 14.1466 4.70814ZM5.96358 18.1984C4.98803 18.1539 4.45779 17.9914 4.10542 17.8541C3.63826 17.6721 3.30494 17.4555 2.95449 17.1054C2.60404 16.7553 2.38711 16.4222 2.20604 15.9549C2.06868 15.6026 1.90618 15.0721 1.86184 14.0962C1.81333 13.0412 1.80364 12.7243 1.80364 10.0514C1.80364 7.3786 1.81413 7.06255 1.86184 6.00666C1.90626 5.03083 2.06996 4.50132 2.20604 4.14797C2.38791 3.68067 2.60452 3.34726 2.95449 2.9967C3.30446 2.64615 3.63746 2.42916 4.10542 2.24804C4.45763 2.11064 4.98803 1.94809 5.96358 1.90373C7.01829 1.85521 7.33512 1.84552 10.006 1.84552C12.6769 1.84552 12.994 1.85601 14.0496 1.90373C15.0252 1.94817 15.5545 2.11192 15.9078 2.24804C16.3749 2.42916 16.7083 2.64663 17.0587 2.9967C17.4092 3.34678 17.6253 3.68067 17.8072 4.14797C17.9445 4.50028 18.107 5.03083 18.1514 6.00666C18.1999 7.06255 18.2096 7.3786 18.2096 10.0514C18.2096 12.7243 18.1999 13.0403 18.1514 14.0962C18.1069 15.0721 17.9436 15.6025 17.8072 15.9549C17.6253 16.4222 17.4087 16.7556 17.0587 17.1054C16.7087 17.4551 16.3749 17.6721 15.9078 17.8541C15.5556 17.9915 15.0252 18.154 14.0496 18.1984C12.9949 18.2469 12.6781 18.2566 10.006 18.2566C7.33392 18.2566 7.01797 18.2469 5.96358 18.1984ZM5.88073 0.103094C4.81553 0.151617 4.08765 0.320567 3.45199 0.567987C2.79368 0.823494 2.23638 1.16628 1.67949 1.72245C1.12259 2.27863 0.780788 2.83696 0.525355 3.49547C0.278007 4.13171 0.109105 4.8594 0.0605963 5.9249C0.0112868 6.99209 0 7.33328 0 10.0514C0 12.7695 0.0112868 13.1106 0.0605963 14.1778C0.109105 15.2434 0.278007 15.971 0.525355 16.6073C0.780788 17.2654 1.12267 17.8244 1.67949 18.3803C2.2363 18.9362 2.79368 19.2785 3.45199 19.5348C4.08885 19.7822 4.81553 19.9511 5.88073 19.9996C6.94817 20.0482 7.28869 20.0603 10.006 20.0603C12.7233 20.0603 13.0644 20.049 14.1313 19.9996C15.1966 19.9511 15.9239 19.7822 16.56 19.5348C17.2179 19.2785 17.7756 18.9365 18.3325 18.3803C18.8894 17.8241 19.2305 17.2654 19.4866 16.6073C19.734 15.971 19.9037 15.2433 19.9514 14.1778C19.9999 13.1098 20.0112 12.7695 20.0112 10.0514C20.0112 7.33328 19.9999 6.99209 19.9514 5.9249C19.9029 4.85932 19.734 4.13131 19.4866 3.49547C19.2305 2.83736 18.8885 2.27951 18.3325 1.72245C17.7765 1.1654 17.2179 0.823494 16.5608 0.567987C15.924 0.320567 15.1965 0.150817 14.1321 0.103094C13.0652 0.0545712 12.7241 0.0424805 10.0068 0.0424805C7.28949 0.0424805 6.94817 0.0537705 5.88073 0.103094Z'
+              />
+            </svg>
           </a>
-          <a href="#" aria-label="LinkedIn" className="size-9 grid place-items-center rounded-full border hover:bg-neutral-50">
-            <Linkedin className="size-4" />
+          <a
+            href='#'
+            aria-label='LinkedIn'
+            className='size-10 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-500 hover:bg-neutral-50'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='18'
+              height='17'
+              viewBox='0 0 18 17'
+              fill='none'
+              stroke='currentColor'
+            >
+              <path
+                className=''
+                fill='currentColor'
+                d='M4.3989 16.1052V5.3H0.810626V16.1052H4.39928H4.3989ZM2.60551 3.825C3.85656 3.825 4.63542 2.99529 4.63542 1.95839C4.612 0.89786 3.85656 0.0913086 2.62931 0.0913086C1.40121 0.0913086 0.599121 0.89786 0.599121 1.95829C0.599121 2.99519 1.3777 3.8249 2.582 3.8249H2.60523L2.60551 3.825ZM6.38506 16.1052H9.97306V10.0717C9.97306 9.74921 9.99648 9.42586 10.0913 9.19551C10.3505 8.55002 10.9409 7.88185 11.9324 7.88185C13.2305 7.88185 13.7501 8.87263 13.7501 10.3253V16.1052H17.338V9.90981C17.338 6.59107 15.568 5.04668 13.2073 5.04668C11.2718 5.04668 10.4217 6.12943 9.94946 6.86689H9.97334V5.30038H6.38525C6.43209 6.31403 6.38497 16.1055 6.38497 16.1055L6.38506 16.1052Z'
+              />
+            </svg>
           </a>
-          <a href="#" aria-label="TikTok" className="size-9 grid place-items-center rounded-full border hover:bg-neutral-50">
-            <Tiktok className="size-4" />
+          <a
+            href='#'
+            aria-label='TikTok'
+            className='size-10 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-500 hover:bg-neutral-50'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='18'
+              height='20'
+              viewBox='0 0 18 20'
+              fill='none'
+              stroke='currentColor'
+            >
+              <path
+                className=''
+                fill='currentColor'
+                d='M15.2758 4.25239C15.1431 4.18381 15.014 4.10863 14.8888 4.02713C14.5248 3.7865 14.1911 3.50296 13.8948 3.18262C13.1535 2.33442 12.8766 1.47394 12.7746 0.871476H12.7787C12.6936 0.371404 12.7288 0.0478516 12.7341 0.0478516H9.35769V13.1038C9.35769 13.2791 9.35769 13.4523 9.35032 13.6235C9.35032 13.6448 9.34827 13.6645 9.34704 13.6874C9.34704 13.6968 9.34704 13.7067 9.345 13.7165C9.345 13.7189 9.345 13.7214 9.345 13.7239C9.30941 14.1923 9.15924 14.6448 8.90771 15.0416C8.65619 15.4384 8.311 15.7673 7.90253 15.9994C7.47681 16.2416 6.99531 16.3686 6.50552 16.368C4.9324 16.368 3.65744 15.0852 3.65744 13.5011C3.65744 11.9169 4.9324 10.6341 6.50552 10.6341C6.80331 10.6339 7.09926 10.6807 7.38239 10.773L7.38648 7.33514C6.52697 7.22412 5.65377 7.29243 4.82197 7.53576C3.99018 7.7791 3.21784 8.19218 2.55368 8.74894C1.97173 9.25458 1.48247 9.85791 1.10794 10.5318C0.965411 10.7775 0.42766 11.7649 0.36254 13.3675C0.321584 14.2772 0.59476 15.2196 0.725 15.6091V15.6173C0.806912 15.8466 1.12432 16.6293 1.64159 17.2891C2.0587 17.8183 2.55151 18.2833 3.10413 18.6689V18.6607L3.11232 18.6689C4.74687 19.7796 6.55917 19.7067 6.55917 19.7067C6.8729 19.694 7.92383 19.7067 9.11728 19.1411C10.441 18.5141 11.1946 17.5799 11.1946 17.5799C11.676 17.0217 12.0588 16.3855 12.3266 15.6988C12.6321 14.8956 12.7341 13.9323 12.7341 13.5473V6.62087C12.7751 6.64544 13.3206 7.00627 13.3206 7.00627C13.3206 7.00627 14.1065 7.51003 15.3328 7.83808C16.2125 8.07153 17.3978 8.12068 17.3978 8.12068V4.76884C16.9825 4.8139 16.1392 4.68284 15.2758 4.25239Z'
+              />
+            </svg>
           </a>
         </div>
-        <div className="mt-6 text-xs text-neutral-500">© {new Date().getFullYear()} Booky</div>
+        <div className='mt-6 text-xs text-neutral-500'>
+          © {new Date().getFullYear()} Danielwi
+        </div>
       </div>
     </footer>
   );

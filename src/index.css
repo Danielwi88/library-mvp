@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
-@theme inline {
+@theme {
   --breakpoint-xs: 360px;
   --breakpoint-xm: 480px;
 
@@ -31,71 +31,59 @@
 
   --text-display-lg: 2.25rem; /* 36px */
   --text-display-lg-line-height: 2.75rem; /* 44px */
-  
 
   --text-display-md: 2rem; /* 32px */
   --text-display-md-line-height: 2.5rem; /* 40px */
   --text-display-3xl-letter-spacing: -0.02em; /* -3% */
 
-
   --text-display-sm: 1.75rem; /* 28px */
   --text-display-sm-line-height: 2.375rem; /* 38px */
-  
 
   --text-display-xs: 1.5rem; /* 24px */
   --text-display-xs-line-height: 2.25rem; /* 36px */
-  
 
   --text-xl: 1.25rem; /* 20px */
   --text-xl-line-height: 2.125rem; /* 34px */
-  
 
   --text-lg: 1.125rem; /* 18px */
   --text-lg-line-height: 2rem; /* 32px */
-  
 
   --text-md: 1rem; /* 16px */
   --text-md-line-height: 1.875rem; /* 30px */
-  
 
   --text-sm: 0.875rem; /* 14px */
   --text-sm-line-height: 1.75rem; /* 28px */
-  
 
   --text-xs: 0.75rem; /* 12px */
   --text-xs-line-height: 1.5rem; /* 24px */
-  
 
-
- 
-  --color-primary-100: #F6F9FE;
-  --color-primary-200: #D2E3FF;
-  --color-primary-300: #1C65DA;
+  --color-primary-100: #f6f9fe;
+  --color-primary-200: #d2e3ff;
+  --color-primary-300: #1c65da;
 
   /* Neutral (Gray) */
-  --color-neutral-25: #FDFDFD;
-  --color-neutral-50: #FAFAFA;
-  --color-neutral-100: #F5F5F5;
-  --color-neutral-200: #E9EAEB;
-  --color-neutral-300: #D5D7DA;
-  --color-neutral-400: #A4A7AE;
+  --color-neutral-25: #fdfdfd;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e9eaeb;
+  --color-neutral-300: #d5d7da;
+  --color-neutral-400: #a4a7ae;
   --color-neutral-500: #717680;
   --color-neutral-600: #535862;
   --color-neutral-700: #414651;
-  --color-neutral-800: #252B37;
-  --color-neutral-900: #181D27;
-  --color-neutral-950: #0A0D12;
+  --color-neutral-800: #252b37;
+  --color-neutral-900: #181d27;
+  --color-neutral-950: #0a0d12;
 
   /* Accent */
-  --color-accent-red: #D9206E;
+  --color-accent-red: #d9206e;
   --color-accent-green: #079455;
-  --color-accent-yellow: #FDB022;
+  --color-accent-yellow: #fdb022;
 
   /* Base */
-  --color-base-white: #FFFFFF;
+  --color-base-white: #ffffff;
   --color-base-black: #000000;
 
-  
   --radius-none: 0rem; /* 0px */
   --radius-xxs: 0.125rem; /* 2px */
   --radius-xs: 0.25rem; /* 4px */
@@ -108,7 +96,8 @@
   --radius-4xl: 1.5rem; /* 24px */
   --radius-full: 9999px; /* ∞ */
 
-  
+  --shadow-custom: 0 0 20px 0 rgba(203, 202, 202, 0.25);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -134,7 +123,7 @@
   color-scheme: light;
   /* Font */
   --font-sans: Quicksand, ui-sans-serif, system-ui, -apple-system;
-  
+
   /* Core tokens (light) mapped to custom palette */
   --background: var(--color-base-white);
   --foreground: var(--color-neutral-900);
@@ -143,7 +132,7 @@
   --popover: var(--color-base-white);
   --popover-foreground: var(--color-neutral-900);
   --primary: var(--color-primary-300);
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #ffffff;
   --secondary: var(--color-neutral-100);
   --secondary-foreground: var(--color-neutral-900);
   --muted: var(--color-neutral-100);
@@ -151,32 +140,32 @@
   --accent: var(--color-neutral-100);
   --accent-foreground: var(--color-neutral-900);
   --destructive: var(--color-accent-red);
-  --destructive-foreground: #FFFFFF;
+  --destructive-foreground: #ffffff;
   --border: var(--color-neutral-200);
   --input: var(--color-neutral-200);
   --ring: var(--color-primary-300);
-  --input-bg: #FFFFFF;
+  --input-bg: #ffffff;
 }
 
 .dark {
   color-scheme: dark;
   --background: var(--color-neutral-900);
-  --foreground: #FFFFFF;
+  --foreground: #ffffff;
   --card: var(--color-neutral-900);
-  --card-foreground: #FFFFFF;
+  --card-foreground: #ffffff;
   --popover: var(--color-neutral-900);
-  --popover-foreground: #FFFFFF;
+  --popover-foreground: #ffffff;
   --primary: var(--color-primary-300);
-  --primary-foreground: #0B1220;
+  --primary-foreground: #0b1220;
   --secondary: var(--color-neutral-800);
-  --secondary-foreground: #FFFFFF;
+  --secondary-foreground: #ffffff;
   --muted: var(--color-neutral-800);
   --muted-foreground: var(--color-neutral-400);
   --accent: var(--color-neutral-800);
-  --accent-foreground: #FFFFFF;
+  --accent-foreground: #ffffff;
   --destructive: var(--color-accent-red);
-  --destructive-foreground: #FFFFFF;
-  --border: var(--color-neutral-800);
+  --destructive-foreground: #ffffff;
+  --border: var(--color-neutral-700);
   --input: var(--color-neutral-800);
   --ring: var(--color-primary-300);
   --input-bg: rgba(65, 70, 81, 0.3);
@@ -184,23 +173,35 @@
 
 /* Map CSS variables to Tailwind v4 color tokens used by shadcn */
 
-
 /* Base */
 @layer base {
-  html { font-family: var(--font-sans); }
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground; }
-  button { cursor: pointer; }
+  html {
+    font-family: var(--font-sans);
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button {
+    cursor: pointer;
+  }
 }
-
 
 /* Utilities in our DS */
 @layer utilities {
-  .ds-card { @apply rounded-xl border bg-card text-card-foreground shadow-sm; }
-  .ds-pill { @apply rounded-full bg-neutral-100 text-neutral-700 px-2.5 py-1 text-xs; }
-  .ds-heading { @apply text-xl font-semibold; }
+  .ds-card {
+    @apply rounded-xl border bg-card text-card-foreground shadow-sm;
+  }
+  .ds-pill {
+    @apply rounded-full bg-neutral-100 text-neutral-950 px-2.5 py-1 text-xs;
+  }
+  .ds-heading {
+    @apply text-xl font-semibold;
+  }
 }
 
 body {
-  font-family:'Quicksand', sans-serif;
+  font-family: 'Quicksand', sans-serif;
 }

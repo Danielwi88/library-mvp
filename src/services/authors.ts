@@ -14,6 +14,16 @@ export async function createAuthor(payload: { name: string; bio: string }) {
 }
 
 export async function fetchAuthorBooks(authorId: string) {
-  const { data } = await api.get(`/authors/${authorId}/books`);
-  return data;
+  const { data } = await api.get(`/books`, { params: { authorId } });
+  const books = data?.data?.books ?? [];
+  return {
+    author: books[0]?.author || { id: authorId, name: 'Unknown Author' },
+    items: books.map((b: any) => ({
+      id: String(b.id),
+      title: String(b.title ?? ""),
+      author: { id: String(b.author?.id ?? ""), name: String(b.author?.name ?? "Unknown") },
+      coverUrl: b.coverImage ?? null,
+      rating: Number.isFinite(b.rating) ? Number(b.rating) : 0
+    }))
+  };
 }

@@ -87,7 +87,7 @@ export function Nav() {
         {user && (
           <div className='hidden md:block flex-1 max-w-xl mx-auto'>
             <div className='relative'>
-              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-6 sm:size-5 text-neutral-950 sm:text-neutral-600' />
+              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-6 sm:size-5 text-neutral-950 sm:text-neutral-950' />
               <Input
                 placeholder='Search book'
                 value={search}
@@ -124,7 +124,6 @@ export function Nav() {
               viewBox='0 0 24 27'
               fill='none'
               className='size-8'
-              
             >
               <path
                 d='M6.6665 7.66667V6.33333C6.6665 4.91885 7.22841 3.56229 8.2286 2.5621C9.22879 1.5619 10.5853 1 11.9998 1C13.4143 1 14.7709 1.5619 15.7711 2.5621C16.7713 3.56229 17.3332 4.91885 17.3332 6.33333V7.66667'
@@ -140,7 +139,7 @@ export function Nav() {
                 fill='currentColor'
               />
             </svg>
-            
+
             {/* <img src="/Bag.png" alt="bag" width='28' height='28' className='sm:w-8 sm:h-8 z-10 hidden ' /> */}
             {cartCount > 0 && (
               <span className='absolute z-50 top-1 right-0.5 min-w-5 h-5 px-1 rounded-full bg-[var(--color-accent-red,#D9206E)] text-white text-xs font-bold leading-5 text-center'>
@@ -246,7 +245,7 @@ export function Nav() {
         <div className='border-t bg-background'>
           <div className='container mx-auto max-w-6xl px-3 py-2'>
             <div className='relative'>
-              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-600' />
+              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-950' />
               <Input
                 autoFocus
                 placeholder='Search book'
@@ -256,7 +255,7 @@ export function Nav() {
               />
               <button
                 aria-label='Close search'
-                className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full text-neutral-700 hover:bg-neutral-100'
+                className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full text-neutral-950 hover:bg-neutral-100'
                 onClick={() => setMobileSearch(false)}
               >
                 <CloseIcon className='size-4' />

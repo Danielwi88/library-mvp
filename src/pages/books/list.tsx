@@ -65,9 +65,9 @@ export default function BookList() {
       {isLoading && <p>Loading...</p>}
       {error && <p className='text-red-500'>Failed to load</p>}
 
-      <h3 className='text-display-xs sm:text-display-lg font-bold mb-10 mt-12 text-neutral-950'>Recommendation</h3>
+      <h3 className='text-display-xs sm:text-display-lg font-bold mb-10 mt-12 text-neutral-950 dark:text-foreground'>Recommendation</h3>
 
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 '>
         {data?.items?.map((b, i) => (
           <ProductCard
             key={b.id}
@@ -85,7 +85,7 @@ export default function BookList() {
       {data?.items && (
         <div className='flex justify-center'>
           <Button
-            className='rounded-full h-10 sm:h-12 text-sm sm:text-md font-bold text-neutral-950 px-[39.5px] sm:px-[59px]'
+            className='rounded-full h-10 sm:h-12 text-sm sm:text-md font-bold text-neutral-950 px-[39.5px] sm:px-[59px] dark:text-foreground'
             variant='outline'
             onClick={() => setPage((p) => p + 1)}
           >
@@ -96,30 +96,26 @@ export default function BookList() {
 
       {/* Popular Authors */}
       <div className='space-y-4'>
-        <h3 className='text-display-xs sm:text-display-lg text-neutral-950 font-bold'>Popular Authors</h3>
-        <div className='grid grid-cols-3 sm:grid-cols-4 gap-3'>
+        <h3 className='text-display-xs sm:text-display-lg text-neutral-950 font-bold dark:text-foreground'>Popular Authors</h3>
+        <div className='grid grid-cols-1 xm:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 '>
           {authors.map(([id, name]) => (
-            <div key={id} className='rounded-xl border p-4 text-center'>
-              <Link to={`/authors/${id}`} className='group block'>
+            <div key={id} className='rounded-xl border-none shadow-custom p-4 text-center '>
+              <Link to={`/authors/${id}`} className='group block '>
               <div className='flex justify-start space-x-4'>
                 <div className='size-15 sm:size-20 rounded-full bg-primary/10 grid place-items-center text-primary font-semibold group-hover:bg-primary/20'>
-                  {/* {name
-                    .split(' ')
-                    .map((p) => p[0])
-                    .slice(0, 2)
-                    .join('')} */}
+                  
                     <img src="/avatarfall.png" alt="avatarfall" width='60' height='60' className='w-full h-full' />
                 </div>
 
                 <div className='flex flex-col space-y-1'>
 
-                <div className='mt-2 text-md leading-[30px] sm:text-lg text-neutral-900 font-bold truncate underline-offset-4 group-hover:underline'>
+                <div className='mt-2 text-md leading-[30px] sm:text-lg text-neutral-900 font-bold truncate underline-offset-4 group-hover:underline dark:text-foreground'>
                   {name}
                 </div>
                 <div className='flex gap-[6px]'>
 
                 <img src="/Book.png" alt="book" width='24' height='24' />
-              <div className='text-sm sm:text-md text-neutral-900 font-medium dark:text-muted-foreground'>
+              <div className='text-sm sm:text-md text-neutral-900  font-medium dark:text-muted-foreground'>
                 5 books</div>
                 </div>
                 </div>

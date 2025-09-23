@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { fetchAuthorBooks } from '../../services/authors';
 import ProductCard from '../../components/product-card'
 
-// Minimal local types to avoid implicit any and keep the page self-contained
+
 interface Author {
   id: string | number;
   name: string;
@@ -71,25 +71,40 @@ const AuthorBooksPage = () => {
   }
 
   return (
-    <div className='container mx-auto py-8'>
-      <h1 className='text-2xl font-semibold mb-4'>
-        Books by {authorData.name}
-      </h1>
-      {authorData.bio && <p className='text-gray-600 mb-4'>{authorData.bio}</p>}
+    <div className='space-y-8 max-w-[1200px]'>
+      {/* Author Profile Section */}
+      <div className='flex items-center gap-4'>
+        <div className='size-16 rounded-full bg-primary/10 grid place-items-center'>
+          <img src="/avatarfall.png" alt="author avatar" width='64' height='64' className='w-full h-full rounded-full' />
+        </div>
+        <div>
+          <h1 className='text-lg font-semibold text-neutral-950 dark:text-foreground'>
+            {authorData.name}
+          </h1>
+          <div className='flex items-center gap-2 text-sm text-neutral-600 dark:text-muted-foreground'>
+            <img src="/Book.png" alt="book" width='16' height='16' />
+            <span>{books.length} books</span>
+          </div>
+        </div>
+      </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-        {books.map((book, index) => (
-          <ProductCard
-            key={book.id}
-            id={book.id}
-            title={book.title}
-            authorName={book.author.name}
-            authorId={book.author.id}
-            coverUrl={book.coverUrl}
-            rating={book.rating ?? undefined}
-            index={index}
-          />
-        ))}
+      {/* Book List Section */}
+      <div className='space-y-6'>
+        <h2 className='text-lg font-semibold text-neutral-950 dark:text-foreground'>Book List</h2>
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+          {books.map((book, index) => (
+            <ProductCard
+              key={book.id}
+              id={book.id}
+              title={book.title}
+              authorName={book.author.name}
+              authorId={book.author.id}
+              coverUrl={book.coverUrl}
+              rating={book.rating ?? undefined}
+              index={index}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
