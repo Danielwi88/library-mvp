@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useMemo, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { getErrorMessage } from '@/lib/errors';
+import { Calendar } from 'lucide-react';
 
 export default function Checkout() {
   const nav = useNavigate();
@@ -156,16 +157,16 @@ export default function Checkout() {
           </div>
           <div className='space-y-6 text-sm'>
             <div>
-              <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
+              <div className='text-neutral-950 text-sm font-bold mb-2'>
                 Borrow Date
               </div>
-              <div className='border border-neutral-300 rounded-md px-3 py-2 text-md font-semibold text-neutral-950 dark:text-foreground'>
-                {borrowDate.format('D MMM YYYY')}
+              <div className='border border-neutral-300 rounded-md px-3 py-2 text-md font-semibold text-neutral-950 dark:text-foreground flex justify-between bg-neutral-100 dark:bg-background'>
+                {borrowDate.format('D MMM YYYY')} <Calendar />
               </div>
             </div>
 
             <div>
-              <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
+              <div className='text-neutral-950 text-sm  font-bold mb-2'>
                 Borrow Duration
               </div>
               <div className='space-y-2'>
@@ -187,11 +188,11 @@ export default function Checkout() {
               </div>
             </div>
 
-            <div>
-              <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
+            <div className='bg-primary-100 p-4'>
+              <div className='text-neutral-950 sm:text-md font-bold mb-2'>
                 Return Date
               </div>
-              <div className='border border-neutral-300 rounded-md px-3 py-2 text-sm'>
+              <div className=' rounded-xl text-sm sm:text-md font-medium'>
                 Please return the book(s) no later than{' '}
                 <span className='text-destructive font-bold'>
                   {returnDate.format('D MMM YYYY')}
@@ -199,27 +200,27 @@ export default function Checkout() {
               </div>
             </div>
 
-            <label className='flex items-center gap-2 text-sm font-medium text-neutral-950 dark:text-foreground'>
+            <label className='flex items-center gap-2 text-sm sm:text-md font-semibold text-neutral-950 dark:text-foreground'>
               <input
                 type='checkbox'
                 checked={agreeA}
                 onChange={(e) => setAgreeA(e.target.checked)}
-                className='size-4'
+                className='size-4 cursor-pointer hover:scale-105'
               />
               I agree to return the book(s) before the due date.
             </label>
-            <label className='flex items-center gap-2 text-sm font-medium text-neutral-950 dark:text-foreground'>
+            <label className='flex items-center gap-2 text-sm sm:text-md font-semibold text-neutral-950 dark:text-foreground'>
               <input
                 type='checkbox'
                 checked={agreeB}
                 onChange={(e) => setAgreeB(e.target.checked)}
-                className='size-4'
+                className='size-4 cursor-pointer hover:scale-105'
               />
               I accept the library borrowing policy.
             </label>
 
             <Button
-              className='w-full rounded-full text-md font-bold text-neutral-25'
+              className='w-full h-12 rounded-full font-bold text-md text-neutral-25 bg-primary-300 cursor-pointer'
               disabled={!agreeA || !agreeB || items.length === 0 || m.isPending}
               onClick={() => m.mutate()}
             >

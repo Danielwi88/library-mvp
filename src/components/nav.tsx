@@ -71,7 +71,7 @@ export function Nav() {
 
   return (
     <header className='sticky top-0 h-16 sm:h-20 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)]'>
-      <div className='container mx-auto max-w-[1200px] px-3 flex items-center gap-3'>
+      <div className='container mx-auto max-w-[1200px] px-3 sm:px-0 flex items-center gap-3'>
         {/* Left: brand */}
         <Link
           to='/'
@@ -87,7 +87,7 @@ export function Nav() {
         {user && (
           <div className='hidden md:block flex-1 max-w-xl mx-auto'>
             <div className='relative'>
-              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-6 sm:size-5 text-neutral-950 sm:text-neutral-950' />
+              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-6 sm:size-5 text-neutral-950 sm:text-neutral-950 dark:text-foreground' />
               <Input
                 placeholder='Search book'
                 value={search}

@@ -73,25 +73,25 @@ const AuthorBooksPage = () => {
   return (
     <div className='space-y-8 max-w-[1200px]'>
       {/* Author Profile Section */}
-      <div className='flex items-center gap-4'>
-        <div className='size-16 rounded-full bg-primary/10 grid place-items-center'>
+      <div className='flex items-center shadow-custom p-4 gap-4'>
+        <div className='size-[60px] sm:size-[81px] rounded-full bg-primary/10 grid place-items-center'>
           <img src="/avatarfall.png" alt="author avatar" width='64' height='64' className='w-full h-full rounded-full' />
         </div>
         <div>
-          <h1 className='text-lg font-semibold text-neutral-950 dark:text-foreground'>
+          <h1 className='text-lg font-bold text-neutral-950 dark:text-foreground'>
             {authorData.name}
           </h1>
-          <div className='flex items-center gap-2 text-sm text-neutral-600 dark:text-muted-foreground'>
-            <img src="/Book.png" alt="book" width='16' height='16' />
+          <div className='mt-1 flex items-center gap-2 text-sm sm:text-md text-neutral-600 dark:text-muted-foreground'>
+            <img src="/Book.png" alt="book" width='24' height='24' />
             <span>{books.length} books</span>
           </div>
         </div>
       </div>
 
       {/* Book List Section */}
-      <div className='space-y-6'>
-        <h2 className='text-lg font-semibold text-neutral-950 dark:text-foreground'>Book List</h2>
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+      <div className='space-y-8'>
+        <h2 className='text-display-lg font-bold text-neutral-950 dark:text-foreground'>Book List</h2>
+        <div className=' grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           {books.map((book, index) => (
             <ProductCard
               key={book.id}

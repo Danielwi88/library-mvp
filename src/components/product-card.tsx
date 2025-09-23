@@ -63,7 +63,7 @@ export function ProductCard({
             src={src}
             onError={onError}
             alt={title}
-            className='w-full h-[336px] object-cover'
+            className='w-full h-[336px] max-h-[336px] object-cover'
           />
           <div className={infoPad}>
             <div

@@ -119,11 +119,11 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <h1 className='mx-auto max-w-[1000px] px-4 sm:px-0 text-display-xs sm:text-display-lg leading-[38px] font-bold mb-4 sm:mb-8'>
-        Categories
+      <h1 className='mx-auto px-4 sm:px-0 text-display-xs sm:text-display-lg leading-[38px] font-bold mb-4 sm:mb-8'>
+        Book List
       </h1>
-      <div className='mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-0 grid md:grid-cols-[220px,1fr] gap-6'>
-        <aside className='rounded-2xl border border-neutral-300 dark:border-border bg-white dark:bg-background p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] h-fit'>
+      <div className='mx-auto flex px-4 sm:px-0  gap-6 sm:gap-10'>
+        <aside className='rounded-2xl w-[266px] border border-neutral-300 dark:border-border bg-white dark:bg-background p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] h-fit'>
           <div className='font-bold text-xl mb-6 text-neutral-950 dark:text-foreground'>
             Filter
           </div>
@@ -174,7 +174,7 @@ export default function CategoriesPage() {
               No books found matching your filters
             </p>
           ) : (
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
               {filteredBooks.map((book, index) => (
                 <ProductCard
                   key={book.id}

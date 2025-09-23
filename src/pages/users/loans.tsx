@@ -86,11 +86,11 @@ export default function Loans() {
             onValueChange={setCurrentTab}
             className='w-full'
           >
-            <TabsList className='grid w-full grid-cols-3 mb-6'>
-              <TabsTrigger value='profile' className='font-medium'>
+            <TabsList className='grid w-[557px] grid-cols-3 mb-6 h-[56px]'>
+              <TabsTrigger value='profile' className='h-10'>
                 Profile
               </TabsTrigger>
-              <TabsTrigger value='borrowed'>Borrowed List</TabsTrigger>
+              <TabsTrigger value='borrowed' className='h-10 active:bg-white rounded-xl'>Borrowed List</TabsTrigger>
               <TabsTrigger value='reviews'>Reviews</TabsTrigger>
             </TabsList>
 
@@ -211,6 +211,7 @@ export default function Loans() {
                         </div>
                       </div>
                       <div className='flex items-end'>
+                        
                         <ReviewModal loan={loan} />
                       </div>
                     </div>
