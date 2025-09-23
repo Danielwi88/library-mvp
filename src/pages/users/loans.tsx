@@ -121,7 +121,7 @@ export default function Loans() {
                   className={`px-4 py-1 rounded-full text-sm ${
                     activeTab === 'all'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100'
+                      : 'bg-gray-100 dark:bg-background border'
                   }`}
                   onClick={() => setActiveTab('all')}
                 >
@@ -131,7 +131,7 @@ export default function Loans() {
                   className={`px-4 py-1 rounded-full text-sm ${
                     activeTab === 'active'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100'
+                      : 'bg-gray-100 dark:bg-background border'
                   }`}
                   onClick={() => setActiveTab('active')}
                 >
@@ -141,7 +141,7 @@ export default function Loans() {
                   className={`px-4 py-1 rounded-full text-sm ${
                     activeTab === 'returned'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100'
+                      : 'bg-gray-100 dark:bg-background border'
                   }`}
                   onClick={() => setActiveTab('returned')}
                 >
@@ -151,7 +151,7 @@ export default function Loans() {
                   className={`px-4 py-1 rounded-full text-sm ${
                     activeTab === 'overdue'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100'
+                      : 'bg-gray-100 dark:bg-background border'
                   }`}
                   onClick={() => setActiveTab('overdue')}
                 >
@@ -211,7 +211,7 @@ export default function Loans() {
                         </div>
                       </div>
                       <div className='flex items-end'>
-                        
+
                         <ReviewModal loan={loan} />
                       </div>
                     </div>

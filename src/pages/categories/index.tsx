@@ -1,8 +1,10 @@
 import ProductCard from '@/components/product-card';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { toggleCategory } from '@/features/ui/uiSlice';
 import { fetchBooks } from '@/services/books';
 import type { RootState } from '@/store';
 import { useQuery } from '@tanstack/react-query';
+import { ListFilter } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -117,54 +119,70 @@ export default function CategoriesPage() {
     [dispatch]
   );
 
+  const FilterPanel = (
+    <div className='rounded-2xl w-[186px]  bg-white dark:bg-background p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] h-fit'>
+      <div className='font-bold text-xl mb-6 text-neutral-950 dark:text-foreground'>
+        Filter
+      </div>
+      <div className='mb-6'>
+        <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
+          Category
+        </div>
+        <div className='space-y-3'>
+          {CATEGORY_FILTER_OPTIONS.map((category) => (
+            <FilterCheckbox
+              key={category.id}
+              checked={selectedCategoryIds.includes(String(category.id))}
+              value={String(category.id)}
+              onChange={handleCategoryToggle}
+              label={category.name}
+            />
+          ))}
+        </div>
+      </div>
+      <div>
+        <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
+          Rating
+        </div>
+        <div className='space-y-3'>
+          {RATING_FILTER_OPTIONS.map((rating) => (
+            <FilterCheckbox
+              key={rating}
+              checked={selectedRatingIds.includes(rating)}
+              value={rating}
+              onChange={handleRatingToggle}
+              label={`${rating}+`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <h1 className='mx-auto px-4 sm:px-0 text-display-xs sm:text-display-lg leading-[38px] font-bold mb-4 sm:mb-8'>
         Book List
       </h1>
-      <div className='mx-auto flex px-4 sm:px-0  gap-6 sm:gap-10'>
-        <aside className='rounded-2xl w-[266px] border border-neutral-300 dark:border-border bg-white dark:bg-background p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] h-fit'>
-          <div className='font-bold text-xl mb-6 text-neutral-950 dark:text-foreground'>
+        <Sheet>
+          <SheetTrigger className='flex sm:hidden w-full items-center  gap-2 py-2 rounded-md border border-neutral-300 dark:border-border bg-white dark:bg-background text-neutral-900 dark:text-foreground mb-4 font-semibold justify-between px-5'>
             Filter
-          </div>
-          <div className='mb-6'>
-            <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
-              Category
-            </div>
-            <div className='space-y-3'>
-              {CATEGORY_FILTER_OPTIONS.map((category) => (
-                <FilterCheckbox
-                  key={category.id}
-                  checked={selectedCategoryIds.includes(String(category.id))}
-                  value={String(category.id)}
-                  onChange={handleCategoryToggle}
-                  label={category.name}
-                />
-              ))}
-            </div>
-          </div>
-          <div>
-            <div className='text-neutral-950 sm:text-neutral-500 font-medium mb-2'>
-              Rating
-            </div>
-            <div className='space-y-3'>
-              {RATING_FILTER_OPTIONS.map((rating) => (
-                <FilterCheckbox
-                  key={rating}
-                  checked={selectedRatingIds.includes(rating)}
-                  value={rating}
-                  onChange={handleRatingToggle}
-                  label={`${rating}+`}
-                />
-              ))}
-            </div>
-          </div>
-        </aside>
+            <ListFilter size={20} />
+          </SheetTrigger>
+          <SheetContent
+            side='left'
+            className='transition-all duration-300 ease-in-out p-5 w-[216px]'
+          >
+            {FilterPanel}
+          </SheetContent>
+        </Sheet>
+      <div className='mx-auto flex px-4 sm:px-0  gap-6 sm:gap-10'>
+        <aside className='hidden sm:block '>{FilterPanel}</aside>
 
         <section className='space-y-6'>
-          <div className='font-bold text-xl text-neutral-950 dark:text-foreground'>
+          {/* <div className='font-bold text-xl text-neutral-950 dark:text-foreground'>
             Book List
-          </div>
+          </div> */}
           {booksQ.isLoading ? (
             <p>Loading books...</p>
           ) : booksQ.error ? (
