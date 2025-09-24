@@ -28,5 +28,40 @@ export async function submitReview(payload: { bookId: number; rating: number; co
 
 export async function getUserReviews(page = 1, limit = 20) {
   const { data } = await api.get(`/me/reviews?page=${page}&limit=${limit}`);
+  
+  if (data?.data?.reviews) {
+    const reviewsWithAuthors = await Promise.all(
+      data.data.reviews.map(async (review: { bookId: number; book?: { id: number; title: string } }) => {
+        try {
+          const bookResponse = await api.get(`/books/${review.bookId}`);
+          const bookData = bookResponse.data?.data;
+          return {
+            ...review,
+            book: {
+              ...review.book,
+              author: bookData?.author || { id: 0, name: 'Unknown Author' }
+            }
+          };
+        } catch {
+          return {
+            ...review,
+            book: {
+              ...review.book,
+              author: { id: 0, name: 'Unknown Author' }
+            }
+          };
+        }
+      })
+    );
+    
+    return {
+      ...data,
+      data: {
+        ...data.data,
+        reviews: reviewsWithAuthors
+      }
+    };
+  }
+  
   return data;
 }

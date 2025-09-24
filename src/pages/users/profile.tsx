@@ -23,7 +23,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="max-w-md space-y-3">
+    <div className="max-w-[557px] space-y-3">
       <h1 className="text-xl font-semibold">My Profile</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         <Input placeholder="Name" {...register("name")} />

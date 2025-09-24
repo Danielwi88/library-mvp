@@ -88,7 +88,7 @@ export default function Register() {
       </div>
       <div className='space-y-2'>
         <h1 className='text-lg sm:text-xl font-bold'>Register</h1>
-        <p className='text-sm sm:text-md font-semibold text-neutral-950'>
+        <p className='text-sm sm:text-md font-medium text-neutral-700 dark:text-foreground'>
           Create your account to start borrowing books.
         </p>
       </div>

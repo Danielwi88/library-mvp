@@ -7,11 +7,11 @@ export interface Loan {
   borrowedAt: string;
   dueAt: string;
   returnedAt: string | null;
-  book: { 
-    id: number; 
-    title: string; 
+  book: {
+    id: number;
+    title: string;
     coverImage: string;
-    author?: { name: string } 
+    author: { id: number; name: string };
   };
 }
 
@@ -36,7 +36,34 @@ export async function borrowBook(payload: { bookId: string | number; days: numbe
 
 export async function myLoans() {
   const { data } = await api.get("/loans/my");
-  return data?.data?.loans as Loan[] || [];
+  const loans = data?.data?.loans || [];
+  
+  // Fetch complete book details for each loan to get author info
+  const loansWithAuthors = await Promise.all(
+    loans.map(async (loan: Partial<Loan>) => {
+      try {
+        const bookResponse = await api.get(`/books/${loan.bookId}`);
+        const bookData = bookResponse.data?.data;
+        return {
+          ...loan,
+          book: {
+            ...loan.book,
+            author: bookData?.author || { id: 0, name: 'Unknown Author' }
+          }
+        };
+      } catch {
+        return {
+          ...loan,
+          book: {
+            ...loan.book,
+            author: { id: 0, name: 'Unknown Author' }
+          }
+        };
+      }
+    })
+  );
+  
+  return loansWithAuthors;
 }
 export async function adminLoans(params?: { status?: string }) {
   const { data } = await api.get("/admin/loans", { params });

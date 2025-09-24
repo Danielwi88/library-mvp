@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { type Loan } from "@/services/loans";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 interface ReviewModalProps {
   loan: Loan;
@@ -18,8 +20,8 @@ export function ReviewModal({ loan }: ReviewModalProps) {
   
   const reviewMutation = useMutation({
     mutationFn: submitReview,
-    onSuccess: (data) => {
-      console.log('Review submitted successfully:', data);
+    onSuccess: () => {
+      toast.success("Review posted successfully");
       setOpen(false);
       setRating(0);
       setComment("");
@@ -28,14 +30,14 @@ export function ReviewModal({ loan }: ReviewModalProps) {
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
     },
     onError: (error) => {
-      console.error('Failed to submit review:', error);
+      toast.error(getErrorMessage(error) ?? "Failed to post review");
     }
   });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-blue-600">Give Review</Button>
+        <Button variant="outline" className="text-white rounded-full !bg-primary-300 w-full sm:w-[182px] h-10">Give Review</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[439px] w-full sm:w-[439px] ">
         <DialogHeader>
@@ -60,7 +62,7 @@ export function ReviewModal({ loan }: ReviewModalProps) {
             ))}
           </div>
           <div>
-            {/* <label className="text-sm text-gray-600 mb-2 block">Share your thoughts about this book</label> */}
+            
             <Textarea
               placeholder="Please share your thoughts about this book"
               value={comment}

@@ -69,7 +69,7 @@ export function ProfileTab() {
       <h1 className="text-xl font-semibold">Profile</h1>
       
       {profileQuery.isLoading ? (
-        <div className="flex justify-center py-8">
+        <div className="flex justify-center py-8 ">
           <img src="/avatarfall.png" alt="avatarfall" />
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
@@ -86,7 +86,7 @@ export function ProfileTab() {
         </div>
       ) : (
         <>
-          <div className="flex flex-col  mb-8  ">
+          <div className="flex flex-col  mb-8  shadow-custom p-5 rounded-2xl ">
             <Avatar className="w-16 h-16 mb-4">
               <AvatarFallback className="bg-blue-600 text-white items-start text-xl">
                 <img src="/avatarfall.png" alt="avatar" width='64' height='64'  />
@@ -145,7 +145,7 @@ export function ProfileTab() {
                 </div>
               </form>
             ) : (
-              <div className="space-y-4 w-full max-w-md">
+              <div className="space-y-4 w-full ">
                 <div className="flex justify-between">
                   <div className="text-sm">Name</div>
                   <div className="font-medium">{userProfile?.name || user?.name || "Not available"}</div>
@@ -162,7 +162,7 @@ export function ProfileTab() {
                 </div>
                 
                 <Button 
-                  className="w-full mt-4" 
+                  className="w-full rounded-full mt-4" 
                   onClick={() => setIsEditing(true)}
                 >
                   Update Profile

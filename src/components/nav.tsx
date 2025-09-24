@@ -15,9 +15,8 @@ import type { RootState } from '@/store';
 import {
   ChevronDown,
   X as CloseIcon,
-  LogOut,
   Menu as MenuIcon,
-  Search as SearchIcon,
+  Search as SearchIcon
 } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,8 +68,9 @@ export function Nav() {
   const search = useSelector((s: RootState) => s.ui.search);
   const [mobileSearch, setMobileSearch] = useState(false);
 
+
   return (
-    <header className='sticky top-0 h-16 sm:h-20 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)]'>
+    <header className='sticky top-0 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex flex-col md:flex-row items-stretch md:items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)] min-h-16 sm:min-h-20'>
       <div className='container mx-auto max-w-[1200px] px-3 sm:px-0 flex items-center gap-3'>
         {/* Left: brand */}
         <Link
@@ -104,7 +104,7 @@ export function Nav() {
           <button
             className='md:hidden p-2 rounded-md border'
             aria-label='Search'
-            onClick={() => setMobileSearch((s) => !s)}
+            onClick={() => setMobileSearch(true)}
           >
             <SearchIcon className='size-4' />
           </button>
@@ -115,7 +115,7 @@ export function Nav() {
           </div>
           <Link
             to='/cart'
-            className='relative p-2 rounded-md border md:border-transparent text-foreground'
+            className='relative p-2 text-foreground'
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -123,7 +123,7 @@ export function Nav() {
               height='27'
               viewBox='0 0 24 27'
               fill='none'
-              className='size-8'
+              className='size-7 sm:size-8'
             >
               <path
                 d='M6.6665 7.66667V6.33333C6.6665 4.91885 7.22841 3.56229 8.2286 2.5621C9.22879 1.5619 10.5853 1 11.9998 1C13.4143 1 14.7709 1.5619 15.7711 2.5621C16.7713 3.56229 17.3332 4.91885 17.3332 6.33333V7.66667'
@@ -140,7 +140,7 @@ export function Nav() {
               />
             </svg>
 
-            {/* <img src="/Bag.png" alt="bag" width='28' height='28' className='sm:w-8 sm:h-8 z-10 hidden ' /> */}
+            
             {cartCount > 0 && (
               <span className='absolute z-50 top-1 right-0.5 min-w-5 h-5 px-1 rounded-full bg-[var(--color-accent-red,#D9206E)] text-white text-xs font-bold leading-5 text-center'>
                 {cartCount}
@@ -164,7 +164,7 @@ export function Nav() {
                     <ChevronDown className='size-6 font-semibold hidden sm:block' />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align='end' className='w-[200px] py-4'>
+                <DropdownMenuContent align='end' className='w-screen sm:w-[200px] py-4'>
                   <DropdownMenuItem
                     onClick={() => nav('/me/loans?tab=profile')}
                   >
@@ -190,7 +190,7 @@ export function Nav() {
                     onClick={() => dispatch(logout())}
                     className='text-destructive'
                   >
-                    <LogOut className='size-4 mr-2' /> Logout
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -213,7 +213,7 @@ export function Nav() {
                   Register
                 </Button>
               </div>
-              {/* Mobile hamburger containing actions */}
+              {/* Mobile hamburger */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -223,16 +223,25 @@ export function Nav() {
                     <MenuIcon className='size-5' />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuItem onClick={() => nav('/')}>
-                    Home
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/login')}>
-                    Login
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => nav('/register')}>
-                    Register
-                  </DropdownMenuItem>
+                <DropdownMenuContent
+                  align='end'
+                  className='w-screen sm:w-auto py-5 px-6 bg-white dark:bg-background'
+                >
+                  <div className='flex items-center gap-3'>
+                    <Button
+                      variant='outline'
+                      className='flex-1 rounded-full h-10 px-5 border-2 border-primary-300 text-primary-300 font-semibold'
+                      onClick={() => nav('/login')}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      className='flex-1 rounded-full h-10 px-6 bg-primary-300 text-white font-semibold hover:bg-primary-400'
+                      onClick={() => nav('/register')}
+                    >
+                      Register
+                    </Button>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
@@ -242,20 +251,20 @@ export function Nav() {
 
       {/* Mobile search row */}
       {mobileSearch && (
-        <div className='border-t bg-background'>
-          <div className='container mx-auto max-w-6xl px-3 py-2'>
+        <div className='md:hidden w-full border-t bg-background'>
+          <div className='w-full px-3 py-2'>
             <div className='relative'>
-              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-950' />
+              <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-950 dark:text-foreground' />
               <Input
                 autoFocus
                 placeholder='Search book'
                 value={search}
                 onChange={(e) => dispatch(setSearch(e.target.value))}
-                className='h-10 rounded-full pl-9 pr-9'
+                className='h-10 w-full rounded-full pl-9 pr-9'
               />
               <button
                 aria-label='Close search'
-                className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full text-neutral-950 hover:bg-neutral-100'
+                className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full text-neutral-950 hover:bg-neutral-100 dark:text-foreground dark:hover:bg-neutral-800/40'
                 onClick={() => setMobileSearch(false)}
               >
                 <CloseIcon className='size-4' />
@@ -264,6 +273,8 @@ export function Nav() {
           </div>
         </div>
       )}
+
+
     </header>
   );
 }

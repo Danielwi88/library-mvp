@@ -75,7 +75,7 @@ export default function Login() {
       </div>
       <div className='space-y-2'>
         <h1 className='text-display-xs sm:text-display-sm font-bold '>Login</h1>
-        <p className='text-sm sm:text-md font-semibold text-neutral-950 mb-5'>
+        <p className='text-sm sm:text-md font-medium text-neutral-950 dark:text-foreground mb-5'>
           Sign in to manage your library account.
         </p>
       </div>
@@ -97,7 +97,7 @@ export default function Login() {
           )}
         </div>
         <div>
-          <Label htmlFor='password' className='font-bold pb-2'>
+          <Label htmlFor='password' className='text-sm font-bold pb-2'>
             Password
           </Label>
           <div className='relative'>
