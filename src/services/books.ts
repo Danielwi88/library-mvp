@@ -46,6 +46,8 @@ export interface BookDetail extends Book {
   totalCopies?: number;
   borrowCount?: number;
   reviewCount?: number;
+  isbn?: string;
+  publishedYear?: number;
 }
 
 // Server payload types (minimal, based on current API)
@@ -66,6 +68,8 @@ interface RemoteBook {
   author?: RemoteAuthor;
   category?: RemoteCategory;
   reviews?: RemoteReview[];
+  isbn?: string | number | null;
+  publishedYear?: string | number | null;
 }
 
 export async function fetchBookDetail(id: string): Promise<{ book: BookDetail; reviews: import('./reviews').Review[] }>
@@ -84,6 +88,15 @@ export async function fetchBookDetail(id: string): Promise<{ book: BookDetail; r
     totalCopies: Number(b.totalCopies ?? 0),
     borrowCount: Number(b.borrowCount ?? 0),
     reviewCount: Number(b.reviewCount ?? 0),
+    isbn: typeof b.isbn === "string" || typeof b.isbn === "number" ? String(b.isbn) : undefined,
+    publishedYear: (() => {
+      if (typeof b.publishedYear === "number") return b.publishedYear;
+      if (typeof b.publishedYear === "string") {
+        const parsed = Number(b.publishedYear);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return undefined;
+    })(),
   };
 
   const reviews = Array.isArray(b.reviews)

@@ -164,7 +164,7 @@ export function Nav() {
                     <ChevronDown className='size-6 font-semibold hidden sm:block' />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align='end' className='w-screen sm:w-[200px] py-4'>
+                <DropdownMenuContent align='end' className='w-screen sm:w-[200px] py-4 sm:bg-white sm:dark:bg-background bg-black/50 backdrop-blur-sm'>
                   <DropdownMenuItem
                     onClick={() => nav('/me/loans?tab=profile')}
                   >
@@ -225,7 +225,7 @@ export function Nav() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align='end'
-                  className='w-screen sm:w-auto py-5 px-6 bg-white dark:bg-background'
+                  className='w-screen sm:w-auto py-5 px-6 sm:bg-white sm:dark:bg-background bg-black/50 backdrop-blur-sm'
                 >
                   <div className='flex items-center gap-3'>
                     <Button

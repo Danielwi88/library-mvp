@@ -58,6 +58,7 @@ export default function EditBook() {
   const [categoryId, setCategoryId] = useState("");
   const [totalCopies, setTotalCopies] = useState<number | ''>(1);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [coverImageData, setCoverImageData] = useState<string>("");
   const [isAuthorModalOpen, setIsAuthorModalOpen] = useState(false);
   const [newAuthorName, setNewAuthorName] = useState("");
   const [authorBio, setAuthorBio] = useState("");
@@ -140,7 +141,9 @@ export default function EditBook() {
       const categoryIdValue = String(book.categoryId || book.categories?.[0]?.id || "");
       setCategoryId(categoryIdValue);
       setTotalCopies(book.totalCopies || 1);
-      setImagePreview(book.coverUrl || book.coverImage || null);
+      const remoteCover = book.coverUrl || book.coverImage || "";
+      setCoverImageData(remoteCover);
+      setImagePreview(remoteCover || null);
     }
   }, [data]);
 
@@ -153,41 +156,79 @@ export default function EditBook() {
     if (!authorId) newErrors.authorId = "Author is required";
     if (!categoryId) newErrors.categoryId = "Category is required";
     if (!totalCopies) newErrors.totalCopies = "Total copies is required";
+    if (!coverImageData) newErrors.coverImage = "Cover image is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const compressImage = (file: File, maxWidth = 800, quality = 0.8): Promise<string> => {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d')!;
-      const img = new Image();
-      
-      img.onload = () => {
-        const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
-        
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+  const compressImage = (file: File, maxWidth = 800, quality = 0.75): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result !== "string") {
+          reject(new Error("Failed to read file"));
+          return;
+        }
+
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(maxWidth / img.width, maxWidth / img.height, 1);
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            reject(new Error("Canvas not supported"));
+            return;
+          }
+
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => reject(new Error("Failed to load image"));
+        img.src = reader.result;
       };
-      
-      img.src = URL.createObjectURL(file);
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsDataURL(file);
     });
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] ?? null;
-    
-    if (selectedFile) {
-      if (selectedFile.size > 5 * 1024 * 1024) {
-        toast.error("File size must be less than 5MB");
-        return;
-      }
-      
-      const compressedImage = await compressImage(selectedFile);
-      setImagePreview(compressedImage);
+    if (!selectedFile) {
+      setImagePreview(null);
+      setCoverImageData("");
+      return;
     }
+
+    if (!/^image\/(jpeg|png|webp)$/i.test(selectedFile.type)) {
+      toast.error("Please select a JPG/PNG/WebP image.");
+      return;
+    }
+
+    if (selectedFile.size > 5 * 1024 * 1024) {
+      toast.error("File size must be less than 5MB");
+      return;
+    }
+
+    try {
+      const dataUrl = await compressImage(selectedFile, 800, 0.72);
+      setCoverImageData(dataUrl);
+      setErrors((prev) => {
+        if (!prev.coverImage) return prev;
+        const updated = { ...prev };
+        delete updated.coverImage;
+        return updated;
+      });
+      setImagePreview(dataUrl);
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error) ?? "Failed to load image");
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setCoverImageData("");
   };
 
   const handleCreateAuthor = () => {
@@ -208,7 +249,7 @@ export default function EditBook() {
       description: description.trim(),
       isbn: isbn.trim(),
       publishedYear: Number(publishedYear) || 2024,
-      coverImage: imagePreview || "",
+      coverImage: coverImageData,
       authorId: Number(authorId),
       categoryId: Number(categoryId),
       totalCopies: Number(totalCopies) || 1,
@@ -374,7 +415,7 @@ export default function EditBook() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => setImagePreview(null)}
+                    onClick={handleRemoveImage}
                     className="text-red-600 flex-1 sm:flex-none"
                   >
                     <X className="size-4 mr-2" />
@@ -403,6 +444,9 @@ export default function EditBook() {
               onChange={handleFileChange}
               className="hidden"
             />
+            {errors.coverImage && (
+              <p className="text-red-500 text-xs mt-2">{errors.coverImage}</p>
+            )}
           </div>
         </div>
         

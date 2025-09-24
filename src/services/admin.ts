@@ -46,6 +46,11 @@ export async function getOverdueLoans(page = 1, limit = 20) {
   return data.data;
 }
 
+export async function getActiveLoans(page = 1, limit = 20) {
+  const { data } = await api.get(`/admin/loans/active?page=${page}&limit=${limit}`);
+  return data.data;
+}
+
 export async function getUsers() {
   const data = await getOverdueLoans(1, 20);
   const loans = data?.overdue || [];

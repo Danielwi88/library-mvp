@@ -85,7 +85,7 @@ export default function BookList() {
       {data?.items && (
         <div className='flex justify-center'>
           <Button
-            className='rounded-full h-10 sm:h-12 text-sm sm:text-md font-bold text-neutral-950 px-[39.5px] sm:px-[59px] dark:text-foreground'
+            className='rounded-full h-10 sm:h-12 text-sm sm:text-md font-bold text-neutral-950 dark:text-background px-[39.5px] sm:px-[59px]'
             variant='outline'
             onClick={() => setPage((p) => p + 1)}
           >

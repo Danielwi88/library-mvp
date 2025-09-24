@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { adminCreateBook } from "@/services/books";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { createAuthor } from "@/services/authors";
+import { adminCreateBook } from "@/services/books";
+import { useState } from "react";
 
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "@/lib/errors";
-import { ArrowLeft, Upload, Plus, X } from "lucide-react";
+import { ArrowLeft, Plus, Upload, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function AdminAddBook() {
   const [title, setTitle] = useState("");
@@ -20,7 +20,7 @@ export default function AdminAddBook() {
   const [authorId, setAuthorId] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [totalCopies, setTotalCopies] = useState<number | ''>(1);
-  const [file, setFile] = useState<File | null>(null);
+  const [, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
