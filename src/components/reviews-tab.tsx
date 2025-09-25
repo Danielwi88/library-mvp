@@ -9,8 +9,9 @@ import { api } from '@/services/api';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/lib/errors';
 import dayjs from 'dayjs';
+import CoverImage from '@/components/cover-image';
 
-// Types
+
 interface Review {
   id: number;
   bookId: number;
@@ -44,7 +45,7 @@ interface ReviewsResponse {
 
 const EMPTY_REVIEWS: Review[] = [];
 
-// Small helpers --------------------------------------------------------------
+
 const Stars = ({ value }: { value: number }) => {
   const count = Math.max(0, Math.min(5, value || 0));
   return (
@@ -54,7 +55,7 @@ const Stars = ({ value }: { value: number }) => {
           key={i}
           src='/star.svg'
           alt={i < count ? 'star filled' : 'star'}
-          className={`h-5 w-5 select-none ${
+          className={`size-6 select-none ${
             i < count ? 'opacity-100' : 'opacity-30'
           }`}
           draggable={false}
@@ -75,9 +76,6 @@ const formatDate = (dateString: string) => {
 
 export function ReviewsTab() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [ratingFilter, setRatingFilter] = useState<'all' | '5' | '4' | '3'>(
-    'all'
-  );
   const [currentPage] = useState(1);
   const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<Loan | null>(null);
@@ -112,7 +110,7 @@ export function ReviewsTab() {
 
   const reviews = data?.data?.reviews ?? EMPTY_REVIEWS;
 
-  // Filter reviews based on search term
+  
   const filteredReviews = useMemo(() => {
     let filtered = reviews;
 
@@ -127,16 +125,8 @@ export function ReviewsTab() {
       );
     }
 
-    if (ratingFilter === '5') {
-      filtered = filtered.filter((r) => r.star === 5);
-    } else if (ratingFilter === '4') {
-      filtered = filtered.filter((r) => r.star === 4);
-    } else if (ratingFilter === '3') {
-      filtered = filtered.filter((r) => r.star <= 3);
-    }
-
     return filtered;
-  }, [reviews, searchTerm, ratingFilter]);
+  }, [reviews, searchTerm]);
 
   return (
     <section className='space-y-6'>
@@ -144,36 +134,13 @@ export function ReviewsTab() {
         Reviews
       </div>
 
-      <div className='mb-4 sm:mb-6'>
+      <div className='mb-4 sm:mb-6 '>
         <Input
           placeholder='Search reviews'
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className='w-full rounded-full'
+          className='max-w-xl rounded-full h-11 sm:h-12'
         />
-      </div>
-
-      <div className='flex flex-wrap gap-2 sm:gap-3'>
-        {([
-          { key: 'all', label: 'All' },
-          { key: '5', label: '5 Stars' },
-          { key: '4', label: '4 Stars' },
-          { key: '3', label: '3 Stars & below' },
-        ] satisfies { key: 'all' | '5' | '4' | '3'; label: string }[]).map(
-          (filter) => (
-            <button
-              key={filter.key}
-              className={`px-4 py-1 rounded-full text-sm ${
-                ratingFilter === filter.key
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 dark:bg-background border'
-              }`}
-              onClick={() => setRatingFilter(filter.key)}
-            >
-              {filter.label}
-            </button>
-          )
-        )}
       </div>
 
       {isLoading && (
@@ -227,46 +194,47 @@ export function ReviewsTab() {
               </div>
 
               
-              <div className='flex flex-col sm:flex-row gap-4 mt-4 text-neutral-950 dark:text-foreground'>
+              <div className='flex flex-col sm:flex-row gap-4 mt-4 text-neutral-950 dark:text-foreground sm:items-center sm:justify-between'>
                 <div 
                   className={correspondingLoan ? 'cursor-pointer hover:opacity-80' : ''}
                   onClick={correspondingLoan ? handleReturnClick : undefined}
                 >
-                  <img
-                    src={review.book.coverImage || '/avatarfall.png'}
+                  <CoverImage
+                    src={review.book.coverImage}
                     alt={review.book.title}
                     className='w-[92px] h-[138px] aspect-[2/3] object-cover rounded-lg border border-neutral-200 dark:border-neutral-800'
                   />
                 </div>
 
-                <div className='flex-1'>
+                <div className='flex-1 flex flex-col justify-center gap-2'>
                   <span 
-                    className={`inline-block rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-50 text-neutral-950 px-2 py-1 text-[11px] font-bold ${correspondingLoan ? 'cursor-pointer hover:opacity-80' : ''}`}
+                    className={`max-w-[79px] text-center inline-block rounded-sm border border-neutral-300 dark:border-border bg-neutral-50 text-neutral-950 px-2 py-1 text-sm font-bold ${correspondingLoan ? 'cursor-pointer hover:opacity-80' : ''}`}
                     onClick={correspondingLoan ? handleReturnClick : undefined}
                   >
                     {review.book.category || 'Category'}
                   </span>
                   <div 
-                    className={`mt-2 text-md sm:text-lg font-bold text-neutral-950 dark:text-foreground ${correspondingLoan ? 'cursor-pointer hover:opacity-80' : ''}`}
+                    className={`text-md sm:text-lg font-bold text-neutral-950 dark:text-foreground ${correspondingLoan ? 'cursor-pointer hover:opacity-80' : ''}`}
                     onClick={correspondingLoan ? handleReturnClick : undefined}
                   >
                     {review.book.title}
                   </div>
-                  <div className='text-sm sm:text-md mt-1 text-neutral-600 dark:text-neutral-400 font-medium'>
+                  <div className='text-sm sm:text-md text-neutral-600 dark:text-neutral-400 font-medium'>
                     {review.book.author?.name || 'Unknown Author'}
                   </div>
-                  <p className='text-sm sm:text-base mt-4 leading-6 text-neutral-950 dark:text-foreground'>
-                    {review.comment}
-                  </p>
+                  
                 </div>
                 
               </div>
               <div className='border-t mt-4 sm:mt-5 border-neutral-200 dark:border-border' />
 
 
-              <div className='flex items-center gap-2 mt-4 sm:mt-5'>
-                  <span>Rating:</span>
+              <div className='flex items-start gap-2 mt-4 sm:mt-5 flex-col justify-center'>
+                
                   <Stars value={review.star} />
+                  <p className='text-sm sm:text-base mt-0 leading-6 text-neutral-950 dark:text-foreground'>
+                    {review.comment}
+                  </p>
                 </div>
             </div>
             );
@@ -282,8 +250,8 @@ export function ReviewsTab() {
           {selectedLoan && (
             <div className="space-y-4">
               <div className="flex gap-4">
-                <img
-                  src={selectedLoan.book.coverImage || '/avatarfall.png'}
+                <CoverImage
+                  src={selectedLoan.book.coverImage}
                   alt={selectedLoan.book.title}
                   className="w-16 h-20 object-cover rounded"
                 />

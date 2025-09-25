@@ -236,7 +236,7 @@ export default function Loans() {
                       </div>
                       <div className='flex-1'>
                         <span 
-                          className={`text-sm inline-block rounded border border-neutral-300 bg-neutral-50 text-neutral-950 px-2 py-1 text-[11px] font-bold ${loan.status === 'BORROWED' ? 'cursor-pointer hover:opacity-80' : ''}`}
+                          className={`text-sm inline-block rounded-sm border border-neutral-300 bg-neutral-50 text-neutral-950 px-2 py-1  font-bold ${loan.status === 'BORROWED' ? 'cursor-pointer hover:opacity-80' : ''}`}
                           onClick={loan.status === 'BORROWED' ? handleReturnClick : undefined}
                         >
                           Category

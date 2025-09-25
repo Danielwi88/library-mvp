@@ -80,13 +80,13 @@ export default function Checkout() {
       </h1>
       <div className='mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-0 sm:flex sm:gap-10 justify-between'>
         <div>
-          <section className='border-b border-neutral-300 dark:border-border bg-white dark:bg-background p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] mb-6'>
+          <section className='border-b border-neutral-300 dark:border-border bg-white dark:bg-background py-5  shadow-[0_1px_2px_rgba(16,24,40,0.04)] mb-6'>
             <div className='font-bold text-lg sm:text-display-xs mb-6 text-neutral-950 dark:text-foreground'>
               User Information
             </div>
-            <div className=' flex flex-col items- gap-3 text-sm'>
-              <div className='flex justify-between'>
-                <div className='text-neutral-950 font-medium text-sm sm:text-md'>
+            <div className=' flex flex-col  gap-3 text-sm'>
+              <div className='flex justify-between '>
+                <div className='text-neutral-950 font-medium text-sm sm:text-md dark:text-foreground'>
                   Name
                 </div>
                 <div className='text-neutral-950 font-bold text-sm sm:text-md dark:text-foreground'>
@@ -94,7 +94,7 @@ export default function Checkout() {
                 </div>
               </div>
               <div className='flex justify-between'>
-                <div className='text-neutral-950 font-medium text-sm sm:text-md'>
+                <div className='text-neutral-950 font-medium text-sm sm:text-md dark:text-foreground '>
                   Email
                 </div>
                 <div className='text-neutral-950 font-bold text-sm sm:text-md dark:text-foreground'>
@@ -102,7 +102,7 @@ export default function Checkout() {
                 </div>
               </div>
               <div className='flex justify-between'>
-                <div className='text-neutral-950 font-medium text-sm sm:text-md'>
+                <div className='text-neutral-950 font-medium text-sm sm:text-md dark:text-foreground'>
                   Phone
                 </div>
                 <div className='text-neutral-950 font-bold text-sm sm:text-md dark:text-foreground'>
@@ -157,7 +157,7 @@ export default function Checkout() {
           </div>
           <div className='space-y-6 text-sm'>
             <div>
-              <div className='text-neutral-950 text-sm font-bold mb-2'>
+              <div className='text-neutral-950 text-sm font-bold mb-2 dark:text-foreground'>
                 Borrow Date
               </div>
               <div className='border border-neutral-300 rounded-md px-3 py-2 text-md font-semibold text-neutral-950 dark:text-foreground flex justify-between bg-neutral-100 dark:bg-background'>
@@ -166,7 +166,7 @@ export default function Checkout() {
             </div>
 
             <div>
-              <div className='text-neutral-950 text-sm  font-bold mb-2'>
+              <div className='text-neutral-950 text-sm  font-bold mb-2 dark:text-foreground'>
                 Borrow Duration
               </div>
               <div className='space-y-2'>
@@ -188,11 +188,11 @@ export default function Checkout() {
               </div>
             </div>
 
-            <div className='bg-primary-100 p-4'>
+            <div className='bg-primary-100 rounded-xl dark:bg-primary-200 p-4'>
               <div className='text-neutral-950 sm:text-md font-bold mb-2'>
                 Return Date
               </div>
-              <div className=' rounded-xl text-sm sm:text-md font-medium'>
+              <div className=' rounded-xl text-sm sm:text-md font-medium dark:text-foreground'>
                 Please return the book(s) no later than{' '}
                 <span className='text-destructive font-bold'>
                   {returnDate.format('D MMM YYYY')}

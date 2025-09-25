@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMyProfile, updateProfile } from "@/services/users";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { updateUser } from "@/features/auth/authSlice";
 
 export function ProfileTab() {
   const user = useSelector((s: RootState) => s.auth.user);
   const queryClient = useQueryClient();
   const profileQuery = useQuery({ queryKey: ["profile"], queryFn: getMyProfile });
+  const dispatch = useDispatch();
   
   // Get profile data from API
   const profileData = profileQuery.data?.data;
@@ -41,13 +43,16 @@ export function ProfileTab() {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: (data: { name: string; phone?: string }) => updateProfile(data),
-    onSuccess: () => {
+    onSuccess: ({ changes, message }, variables) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      toast.success("Profile updated successfully");
+      const updates = changes && Object.keys(changes).length > 0 ? changes : variables;
+      dispatch(updateUser(updates));
+      toast.success(message);
       setIsEditing(false);
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to update profile");
+    onError: (error: unknown) => {
+      const message = error instanceof Error ? error.message : "Failed to update profile";
+      toast.error(message);
     }
   });
 
@@ -59,8 +64,8 @@ export function ProfileTab() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateProfileMutation.mutate({ 
-      name: formData.name,
-      phone: formData.phone || undefined
+      name: formData.name.trim(),
+      phone: formData.phone?.trim() ? formData.phone.trim() : undefined
     });
   };
 

@@ -16,7 +16,7 @@ import {
   ChevronDown,
   X as CloseIcon,
   Menu as MenuIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -68,7 +68,6 @@ export function Nav() {
   const search = useSelector((s: RootState) => s.ui.search);
   const [mobileSearch, setMobileSearch] = useState(false);
 
-
   return (
     <header className='sticky top-0 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex flex-col md:flex-row items-stretch md:items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)] min-h-16 sm:min-h-20'>
       <div className='container mx-auto max-w-[1200px] px-3 sm:px-0 flex items-center gap-3'>
@@ -113,10 +112,7 @@ export function Nav() {
           <div className='block'>
             <ThemeToggle />
           </div>
-          <Link
-            to='/cart'
-            className='relative p-2 text-foreground'
-          >
+          <Link to='/cart' className='relative p-2 text-foreground'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               width='24'
@@ -140,7 +136,6 @@ export function Nav() {
               />
             </svg>
 
-            
             {cartCount > 0 && (
               <span className='absolute z-50 top-1 right-0.5 min-w-5 h-5 px-1 rounded-full bg-[var(--color-accent-red,#D9206E)] text-white text-xs font-bold leading-5 text-center'>
                 {cartCount}
@@ -164,31 +159,40 @@ export function Nav() {
                     <ChevronDown className='size-6 font-semibold hidden sm:block' />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align='end' className='w-screen sm:w-[200px] py-4 sm:bg-white sm:dark:bg-background bg-black/50 backdrop-blur-sm'>
+                <DropdownMenuContent
+                  align='end'
+                  className='w-screen sm:w-[200px] py-4 sm:bg-white sm:dark:bg-background bg-black/50 backdrop-blur-sm '
+                >
                   <DropdownMenuItem
                     onClick={() => nav('/me/loans?tab=profile')}
+                    className='cursor-pointer'
                   >
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => nav('/me/loans?tab=borrowed')}
+                    className='cursor-pointer'
                   >
                     Borrowed List
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => nav('/me/loans?tab=reviews')}
+                    className='cursor-pointer'
                   >
                     Reviews
                   </DropdownMenuItem>
                   {user.role === 'ADMIN' && (
-                    <DropdownMenuItem onClick={() => nav('/admin')}>
+                    <DropdownMenuItem
+                      onClick={() => nav('/admin')}
+                      className='cursor-pointer'
+                    >
                       Admin Dashboard
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => dispatch(logout())}
-                    className='text-destructive'
+                    className='text-destructive cursor-pointer'
                   >
                     Logout
                   </DropdownMenuItem>
@@ -201,7 +205,7 @@ export function Nav() {
               <div className='hidden md:flex items-center gap-2'>
                 <Button
                   variant='outline'
-                  className='rounded-full h-9 px-4'
+                  className='rounded-full h-9 px-4 !text-primary-300'
                   onClick={() => nav('/login')}
                 >
                   Login
@@ -229,8 +233,8 @@ export function Nav() {
                 >
                   <div className='flex items-center gap-3'>
                     <Button
-                      variant='outline'
-                      className='flex-1 rounded-full h-10 px-5 border-2 border-primary-300 text-primary-300 font-semibold'
+                      variant='outline2'
+                      className='flex-1 rounded-full h-10 px-5 border-2 border-primary-300 !bg-white !text-primary-300  font-semibold'
                       onClick={() => nav('/login')}
                     >
                       Login
@@ -273,8 +277,6 @@ export function Nav() {
           </div>
         </div>
       )}
-
-
     </header>
   );
 }

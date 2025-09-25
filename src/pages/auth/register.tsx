@@ -1,14 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { setAuth } from '@/features/auth/authSlice';
 import { getErrorMessage } from '@/lib/errors';
 import { register as apiRegister } from '@/services/users';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -33,22 +31,20 @@ export default function Register() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Form>({ resolver: zodResolver(schema) });
-  const dispatch = useDispatch();
   const nav = useNavigate();
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirmPwd, setShowConfirmPwd] = useState(false);
 
   const onSubmit = async (v: Form) => {
     try {
-      const res = await apiRegister({
+      await apiRegister({
         name: v.name,
         email: v.email,
         phone: v.phone,
         password: v.password,
       });
-      dispatch(setAuth(res));
       toast.success('Account successfully Registered, please login!');
-      nav('/');
+      nav('/login');
     } catch (e: unknown) {
       toast.error(getErrorMessage(e) ?? 'Registration failed');
     }

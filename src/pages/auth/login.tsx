@@ -33,7 +33,7 @@ export default function Login() {
     try {
       const res = await apiLogin(v);
       dispatch(setAuth(res));
-      toast.success('Welcome back!');
+      toast.success('Welcome to library!');
       if (res.user.role === 'ADMIN') nav('/admin');
       else nav('/');
     } catch (e: unknown) {

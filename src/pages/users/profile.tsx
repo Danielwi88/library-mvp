@@ -14,9 +14,11 @@ export default function Profile() {
 
   const onSubmit = async (v: { name: string; phone?: string }) => {
     try {
-      const u = await updateProfile(v);
-      dispatch(updateUser(u));
-      toast.success("Profile updated");
+      const payload = { name: v.name, phone: v.phone?.trim() ? v.phone : undefined };
+      const { changes, message } = await updateProfile(payload);
+      const updates = Object.keys(changes).length > 0 ? changes : payload;
+      dispatch(updateUser(updates));
+      toast.success(message);
     } catch {
       toast.error("Failed to update");
     }

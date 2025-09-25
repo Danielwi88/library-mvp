@@ -1,8 +1,12 @@
 import { api } from "./api";
-import type { User } from "@/features/auth/types";
+import type { Role, User } from "@/features/auth/types";
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
+}
+
+function isRole(v: unknown): v is Role {
+  return v === "USER" || v === "ADMIN";
 }
 
 function unwrapAuthResponse(raw: unknown): { token: string; user: User } {
@@ -59,9 +63,49 @@ export async function register(payload: { name: string; email: string; phone?: s
   const parsed = unwrapAuthResponse(data);
   return parsed;
 }
+interface UpdateProfileResponse {
+  message?: string;
+  data?: {
+    profile?: {
+      id?: number | string;
+      name?: string;
+      email?: string;
+      phone?: string | null;
+      role?: string;
+    };
+  };
+}
+
 export async function updateProfile(p: Partial<Pick<User, "name" | "phone">>) {
-  const { data } = await api.patch("/users/me", p);
-  return data as User;
+  const { data } = await api.patch<UpdateProfileResponse>("/me", p);
+
+  const profile = isRecord(data?.data) && isRecord((data.data as Record<string, unknown>).profile)
+    ? ((data.data as Record<string, unknown>).profile as Record<string, unknown>)
+    : null;
+
+  const changes: Partial<User> = {};
+
+  if (profile) {
+    if (typeof profile.id === "number" || typeof profile.id === "string") {
+      changes.id = String(profile.id);
+    }
+    if (typeof profile.name === "string") {
+      changes.name = profile.name;
+    }
+    if (typeof profile.email === "string") {
+      changes.email = profile.email;
+    }
+    if (profile.phone === null || typeof profile.phone === "string") {
+      changes.phone = profile.phone ?? null;
+    }
+    if (isRole(profile.role)) {
+      changes.role = profile.role;
+    }
+  }
+
+  const message = typeof data?.message === "string" ? data.message : "Profile updated";
+
+  return { changes, message };
 }
 export interface AdminUser {
   id: number;

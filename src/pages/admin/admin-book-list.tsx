@@ -125,7 +125,7 @@ export default function AdminBookList() {
                     {/* Desktop buttons */}
                     <div className="hidden sm:flex gap-2 ">
                       <Button 
-                        variant="outline" 
+                        variant="outline2" 
                         size="sm"
                         onClick={() => navigate(`/admin/book/${book.id}`)}
                         className="rounded-full h-12 w-[95px] font-bold sm:text-md"
@@ -133,7 +133,7 @@ export default function AdminBookList() {
                         Preview
                       </Button>
                       <Button 
-                        variant="outline" 
+                        variant="outline2" 
                         size="sm"
                         onClick={() => navigate(`/admin/book/${book.id}/edit`)}
                         className="rounded-full h-12 w-[95px] font-bold sm:text-md"

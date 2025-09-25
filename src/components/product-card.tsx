@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
+import CoverImage from '@/components/cover-image';
 
 type Props = {
   id: string | number;
@@ -10,7 +10,7 @@ type Props = {
   authorId?: string | number;
   coverUrl?: string | null;
   rating?: number;
-  index?: number; // used to start fallback sequence deterministically
+  index?: number; // retained for backwards compatibility
   compact?: boolean; // tighter padding for sidebars/related
   showDetailButton?: boolean;
   className?: string;
@@ -28,26 +28,6 @@ export function ProductCard({
   showDetailButton = false,
   className = '',
 }: Props) {
-  const fallbacks = useMemo(
-    () => ['/image1.png', '/image2.png', '/image3.png', '/image4.png'],
-    []
-  );
-  const [fbIdx, setFbIdx] = useState(index % fallbacks.length);
-  const [src, setSrc] = useState<string>(coverUrl || fallbacks[fbIdx]);
-
-  useEffect(() => {
-    // Reset when cover changes
-    if (coverUrl) setSrc(coverUrl);
-    else setSrc(fallbacks[fbIdx]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coverUrl]);
-
-  const onError = () => {
-    const next = (fbIdx + 1) % fallbacks.length;
-    setFbIdx(next);
-    setSrc(fallbacks[next]);
-  };
-
   const infoPad = compact ? 'p-3' : 'p-4';
 
   const navigate = useNavigate();
@@ -59,10 +39,10 @@ export function ProductCard({
     >
       <Card className='rounded-2xl overflow-hidden'>
         <CardContent className='p-0'>
-          <img
-            src={src}
-            onError={onError}
+          <CoverImage
+            src={coverUrl}
             alt={title}
+            index={index}
             className='w-full h-[336px] max-h-[336px] object-cover'
           />
           <div className={infoPad}>
