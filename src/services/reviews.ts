@@ -26,6 +26,11 @@ export async function submitReview(payload: { bookId: number; rating: number; co
   return data;
 }
 
+export async function deleteReview(reviewId: number) {
+  const { data } = await api.delete(`/reviews/${reviewId}`);
+  return data;
+}
+
 export async function getUserReviews(page = 1, limit = 20) {
   const { data } = await api.get(`/me/reviews?page=${page}&limit=${limit}`);
   

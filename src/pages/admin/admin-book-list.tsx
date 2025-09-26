@@ -1,6 +1,6 @@
 import PaginationBar from "@/components/pagination-bar";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/lib/errors";
@@ -195,6 +195,9 @@ export default function AdminBookList() {
           <DialogHeader>
             <DialogTitle>Delete Book</DialogTitle>
           </DialogHeader>
+          <DialogDescription className="sr-only">
+            Confirm deletion of the selected book from the catalog.
+          </DialogDescription>
           <p>Are you sure you want to delete "{bookToDelete?.title}"? This action cannot be undone.</p>
           <div className="flex justify-end gap-2 mt-4">
             <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>

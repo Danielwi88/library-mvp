@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { getUserReviews } from '@/services/reviews';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { getUserReviews, deleteReview } from '@/services/reviews';
 import { myLoans, type Loan } from '@/services/loans';
 import { api } from '@/services/api';
 import { toast } from 'sonner';
@@ -79,6 +79,8 @@ export function ReviewsTab() {
   const [currentPage] = useState(1);
   const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<Loan | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const queryClient = useQueryClient();
 
   const returnBookMutation = useMutation({
@@ -94,6 +96,21 @@ export function ReviewsTab() {
     },
     onError: (error) => {
       toast.error(getErrorMessage(error) ?? "Failed to return book");
+    }
+  });
+
+  const deleteReviewMutation = useMutation({
+    mutationFn: async (reviewId: number) => {
+      return await deleteReview(reviewId);
+    },
+    onSuccess: () => {
+      toast.success("Review deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      setDeleteModalOpen(false);
+      setSelectedReview(null);
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error) ?? "Failed to delete review");
     }
   });
 
@@ -230,12 +247,24 @@ export function ReviewsTab() {
 
 
               <div className='flex items-start gap-2 mt-4 sm:mt-5 flex-col justify-center'>
-                
+                <div className='flex items-center justify-between w-full'>
                   <Stars value={review.star} />
-                  <p className='text-sm sm:text-base mt-0 leading-6 text-neutral-950 dark:text-foreground'>
-                    {review.comment}
-                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      setSelectedReview(review);
+                      setDeleteModalOpen(true);
+                    }}
+                    className="text-accent-red hover:text-red-500 hover:font-bold hover:bg-red-50 rounded-full px-6"
+                  >
+                    Delete
+                  </Button>
                 </div>
+                <p className='text-sm sm:text-base mt-0 leading-6 text-neutral-950 dark:text-foreground'>
+                  {review.comment}
+                </p>
+              </div>
             </div>
             );
           })}
@@ -243,11 +272,14 @@ export function ReviewsTab() {
       )}
 
       <Dialog open={returnModalOpen} onOpenChange={setReturnModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Return Book</DialogTitle>
-          </DialogHeader>
-          {selectedLoan && (
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Return Book</DialogTitle>
+        </DialogHeader>
+        <DialogDescription className="sr-only">
+          Review the borrowing details and confirm returning the selected book.
+        </DialogDescription>
+        {selectedLoan && (
             <div className="space-y-4">
               <div className="flex gap-4">
                 <CoverImage
@@ -274,6 +306,48 @@ export function ReviewsTab() {
                   className="bg-green-600 hover:bg-green-700"
                 >
                   {returnBookMutation.isPending ? "Processing..." : "Mark as Returned"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Review</DialogTitle>
+        </DialogHeader>
+        <DialogDescription className="sr-only">
+          Confirm permanent deletion of the selected review entry.
+        </DialogDescription>
+        {selectedReview && (
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <CoverImage
+                  src={selectedReview.book.coverImage}
+                  alt={selectedReview.book.title}
+                  className="w-16 h-20 object-cover rounded"
+                />
+                <div>
+                  <div className="font-medium">{selectedReview.book.title}</div>
+                  <div className="text-sm text-gray-500">{selectedReview.book.author?.name}</div>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Stars value={selectedReview.star} />
+                  </div>
+                </div>
+              </div>
+              <p>Are you sure you want to delete this review? This action cannot be undone.</p>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setDeleteModalOpen(false)} className='rounded-full'>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={() => deleteReviewMutation.mutate(selectedReview.id)}
+                  disabled={deleteReviewMutation.isPending}
+                  className="bg-red-600 hover:bg-red-700 rounded-full"
+                >
+                  {deleteReviewMutation.isPending ? "Deleting..." : "Delete Review"}
                 </Button>
               </div>
             </div>

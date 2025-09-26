@@ -14,6 +14,7 @@ import { ReviewModal } from '@/components/review-modal';
 import { api } from '@/services/api';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/lib/errors';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 export default function Loans() {
   const [searchParams] = useSearchParams();
@@ -241,12 +242,25 @@ export default function Loans() {
                         >
                           Category
                         </span>
-                        <div 
-                          className={`mt-2 text-md sm:text-lg font-bold text-neutral-950 dark:text-foreground ${loan.status === 'BORROWED' ? 'cursor-pointer hover:opacity-80' : ''}`}
-                          onClick={loan.status === 'BORROWED' ? handleReturnClick : undefined}
-                        >
-                          {loan.book.title}
-                        </div>
+                        {loan.status === 'BORROWED' ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div 
+                                className="mt-2 text-md sm:text-lg font-bold text-neutral-950 dark:text-foreground cursor-pointer hover:opacity-80"
+                                onClick={handleReturnClick}
+                              >
+                                {loan.book.title}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Click to return book
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <div className="mt-2 text-md sm:text-lg font-bold text-neutral-950 dark:text-foreground">
+                            {loan.book.title}
+                          </div>
+                        )}
                         <div className='text-sm sm:text-md mt-1  text-neutral-950 sm:text-neutral-500 font-medium'>
                           {(() => {
                             const author = loan.book.author;

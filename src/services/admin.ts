@@ -25,30 +25,69 @@ export interface OverdueLoan {
   borrowedAt: string;
   dueAt: string;
   returnedAt: string | null;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  user?: {
+    id?: number;
+    name?: string;
+    email?: string;
+  } | null;
   book: {
     id: number;
     title: string;
-    coverUrl?: string;
-    author: {
-      id: number;
-      name: string;
-    };
+    coverUrl?: string | null;
+    coverImage?: string | null;
+    author?: {
+      id?: number;
+      name?: string;
+    } | null;
   };
 }
 
-export async function getOverdueLoans(page = 1, limit = 20) {
+export interface PaginatedLoansMeta {
+  totalItems?: number;
+  total?: number;
+  totalPages?: number;
+  page?: number;
+  limit?: number;
+  perPage?: number;
+}
+
+export interface OverdueLoansResponse {
+  overdue: OverdueLoan[];
+  total?: number;
+  page?: number;
+  limit?: number;
+}
+
+export interface MyLoansResponse {
+  loans: OverdueLoan[];
+  pagination?: PaginatedLoansMeta | null;
+}
+
+export async function getOverdueLoans(page = 1, limit = 20): Promise<OverdueLoansResponse> {
   const { data } = await api.get(`/admin/loans/overdue?page=${page}&limit=${limit}`);
-  return data.data;
+  return data.data as OverdueLoansResponse;
 }
 
 export async function getActiveLoans(page = 1, limit = 20) {
   const { data } = await api.get(`/admin/loans/active?page=${page}&limit=${limit}`);
   return data.data;
+}
+
+export async function getMyLoans(options: { page?: number; limit?: number; status?: string } = {}): Promise<MyLoansResponse> {
+  const { page = 1, limit = 20, status } = options;
+  const params: Record<string, number | string> = { page, limit };
+  if (status) params.status = status;
+
+  const { data } = await api.get("/me/loans", { params });
+  const raw = data?.data ?? {};
+  const loans = Array.isArray(raw.loans) ? (raw.loans as OverdueLoan[]) : [];
+  const pagination = (raw.pagination ?? raw.meta ?? raw.pageInfo ?? null) as PaginatedLoansMeta | null;
+
+  if (pagination && !pagination.totalItems && typeof raw.total === "number") {
+    pagination.totalItems = raw.total;
+  }
+
+  return { loans, pagination };
 }
 
 export async function getUsers() {
@@ -57,12 +96,14 @@ export async function getUsers() {
   
   const usersMap = new Map();
   loans.forEach((loan: OverdueLoan) => {
-    if (!usersMap.has(loan.user.id)) {
-      usersMap.set(loan.user.id, {
-        id: loan.user.id,
-        name: loan.user.name,
-        email: loan.user.email,
-        role: loan.user.id === 1 ? 'ADMIN' : 'USER',
+    const user = loan.user;
+    if (!user?.id) return;
+    if (!usersMap.has(user.id)) {
+      usersMap.set(user.id, {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.id === 1 ? 'ADMIN' : 'USER',
         createdAt: loan.borrowedAt
       });
     }

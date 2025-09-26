@@ -6,12 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors";
 import { ArrowLeft, Upload, X, Plus } from "lucide-react";
 import { api } from "@/services/api";
 import { isAxiosError } from "axios";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface BookDetail {
   title?: string;
@@ -303,15 +304,25 @@ export default function EditBook() {
               className={`h-12 flex-1 bg-gray-50 ${errors.authorId ? "border-red-500" : ""}`}
             />
             <Dialog open={isAuthorModalOpen} onOpenChange={setIsAuthorModalOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="h-12 px-3">
-                  <Plus className="size-4" />
-                </Button>
-              </DialogTrigger>
+              <TooltipProvider>
+                <Tooltip>
+                  <DialogTrigger asChild>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" className="h-12 px-3">
+                        <Plus className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                  </DialogTrigger>
+                  <TooltipContent side="top">Register new author here</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Add New Author</DialogTitle>
                 </DialogHeader>
+                <DialogDescription className="sr-only">
+                  Fill out the new author information to attach them to this book.
+                </DialogDescription>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
@@ -380,6 +391,19 @@ export default function EditBook() {
             className={`h-12 ${errors.publishedYear ? "border-red-500" : ""}`}
           />
           {errors.publishedYear && <p className="text-red-500 text-xs mt-1">{errors.publishedYear}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Total Copies</label>
+          <Input
+            type="number"
+            min={0}
+            placeholder="Enter total copies"
+            value={totalCopies}
+            onChange={(e) => setTotalCopies(e.target.value ? Number(e.target.value) : '')}
+            className={`h-12 ${errors.totalCopies ? "border-red-500" : ""}`}
+          />
+          {errors.totalCopies && <p className="text-red-500 text-xs mt-1">{errors.totalCopies}</p>}
         </div>
         
         <div>

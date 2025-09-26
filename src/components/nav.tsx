@@ -204,14 +204,15 @@ export function Nav() {
               {/* Desktop buttons */}
               <div className='hidden md:flex items-center gap-2'>
                 <Button
-                  variant='outline'
-                  className='rounded-full h-9 px-4 !text-primary-300'
+                  variant='outline4'
+                  className='rounded-full h-12 px-4 w-[163px] text-md font-bold '
                   onClick={() => nav('/login')}
                 >
                   Login
                 </Button>
                 <Button
-                  className='rounded-full h-9 px-5'
+                  variant='outline4'
+                  className='rounded-full h-12 w-[163px] text-md font-bold px-5 '
                   onClick={() => nav('/register')}
                 >
                   Register

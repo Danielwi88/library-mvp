@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { createAuthor } from "@/services/authors";
 import { adminCreateBook } from "@/services/books";
 import { useState } from "react";
@@ -179,15 +180,25 @@ export default function AdminAddBook() {
               className={`h-12 flex-1 ${errors.authorId ? "border-red-500" : ""}`}
             />
             <Dialog open={authorModalOpen} onOpenChange={setAuthorModalOpen}>
-              <DialogTrigger asChild>
-                <Button type="button" variant="outline" className="h-12 px-3">
-                  <Plus className="size-4" />
-                </Button>
-              </DialogTrigger>
+              <TooltipProvider>
+                <Tooltip>
+                  <DialogTrigger asChild>
+                    <TooltipTrigger asChild>
+                      <Button type="button" variant="outline" className="h-12 px-3 ">
+                        <Plus className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                  </DialogTrigger>
+                  <TooltipContent side="top">Register new author here</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <DialogContent className="max-w-md">
                 <DialogHeader>
                   <DialogTitle>Create New Author</DialogTitle>
                 </DialogHeader>
+                <DialogDescription className="sr-only">
+                  Provide the author details to add them to the library.
+                </DialogDescription>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>

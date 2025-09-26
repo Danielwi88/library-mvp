@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { submitReview } from "@/services/reviews";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { type Loan } from "@/services/loans";
 import { toast } from "sonner";
@@ -43,6 +43,9 @@ export function ReviewModal({ loan }: ReviewModalProps) {
         <DialogHeader>
           <DialogTitle className="text-start sm:text-center text-neutral-950 dark:text-foreground text-lg sm:text-display-xs font-bold">Give Review</DialogTitle>
         </DialogHeader>
+        <DialogDescription className="sr-only">
+          Rate and write a review for {loan.book.title} before submitting.
+        </DialogDescription>
         <h2 className="text-center text-neutral-950 text-sm sm:text-md font-bold dark:text-foreground">Give Rating</h2>
         <div className="space-y-6">
           <div className="flex justify-center space-x-1">
