@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import CoverImage from "@/components/cover-image";
 
 
 export default function AdminDashboard() {
@@ -130,7 +131,7 @@ function OverviewTab() {
 
 function BorrowedListTab() {
   const [search, setSearch] = useState("");
-  const [activeFilter, setActiveFilter] = useState("Overview");
+  const [activeFilter, setActiveFilter] = useState("All");
   const [page, setPage] = useState(1);
   const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<OverdueLoan | null>(null);
@@ -168,12 +169,12 @@ function BorrowedListTab() {
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Borrowed List</h1>
-      <div className="flex space-x-2">
-        {["Overview", "All", "Active", "Returned", "Overdue"].map((filter) => (
+      <div className="flex space-x-2 ">
+        {["All", "Active", "Returned", "Overdue", "Overview"].map((filter) => (
           <button
             key={filter}
-            className={`px-4 py-1 rounded-full text-sm ${
-              activeFilter === filter ? "bg-blue-600 text-white" : "bg-gray-100"
+            className={`px-4 h-10 py-1 rounded-full text-sm ${
+              activeFilter === filter ? "bg-primary-300 text-white" : "bg-gray-100"
             }`}
             onClick={() => setActiveFilter(filter)}
           >
@@ -207,17 +208,12 @@ function BorrowedListTab() {
               >
                 <div className="flex justify-between items-start">
                   <div className="flex gap-4">
-                    {loan.book.coverUrl ? (
-                      <img 
-                        src={loan.book.coverUrl} 
-                        alt={loan.book.title}
-                        className="w-16 h-20 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-16 h-20 bg-gray-200 rounded flex items-center justify-center text-xs">
-                        No Cover
-                      </div>
-                    )}
+                    <CoverImage
+                      src={loan.book.coverUrl}
+                      alt={loan.book.title}
+                      index={loan.id}
+                      className="w-16 h-20 object-cover rounded"
+                    />
                     <div>
                       <div className="text-sm text-gray-500">Category</div>
                       <div className="font-medium">{loan.book.title}</div>
@@ -260,17 +256,12 @@ function BorrowedListTab() {
           {selectedLoan && (
             <div className="space-y-4">
               <div className="flex gap-4">
-                {selectedLoan.book.coverUrl ? (
-                  <img 
-                    src={selectedLoan.book.coverUrl} 
-                    alt={selectedLoan.book.title}
-                    className="w-16 h-20 object-cover rounded"
-                  />
-                ) : (
-                  <div className="w-16 h-20 bg-gray-200 rounded flex items-center justify-center text-xs">
-                    No Cover
-                  </div>
-                )}
+                <CoverImage
+                  src={selectedLoan.book.coverUrl}
+                  alt={selectedLoan.book.title}
+                  index={selectedLoan.id}
+                  className="w-16 h-20 object-cover rounded"
+                />
                 <div>
                   <div className="font-medium">{selectedLoan.book.title}</div>
                   <div className="text-sm text-gray-500">{selectedLoan.book.author.name}</div>
@@ -300,7 +291,5 @@ function BorrowedListTab() {
     </div>
   );
 }
-
-
 
 

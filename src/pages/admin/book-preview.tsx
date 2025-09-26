@@ -5,10 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink, Share2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { add } from "@/features/cart/cartSlice";
 
 export default function AdminBookPreview() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["book-detail", id],
@@ -24,19 +27,19 @@ export default function AdminBookPreview() {
   const rating = Number.isFinite(book.rating) ? Number(book.rating).toFixed(1) : "0.0";
   const totalCopies = book.totalCopies ?? 0;
   const reviewCount = book.reviewCount ?? 0;
-  const borrowCount = book.borrowCount ?? 0;
-  const publishedYear = book.publishedYear;
-  const isbn = book.isbn;
+  // const borrowCount = book.borrowCount ?? 0;
+  // const publishedYear = book.publishedYear;
+  // const isbn = book.isbn;
 
   return (
     <div className="mx-auto max-w-[1040px] px-4 sm:px-6 lg:px-0 space-y-6">
       <div className="flex items-center gap-2 text-xs text-neutral-500">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-700 hover:bg-neutral-100"
+          className="flex items-center gap-2  border-neutral-200 px-3 py-1 text-xl sm:text-display-sm font-bold text-foreground hover:bg-neutral-100"
         >
-          <ArrowLeft className="size-4" />
-          Back
+          <ArrowLeft className="size-8" />
+          Preview Book
         </button>
         <span className="hidden sm:block text-neutral-300">|</span>
         <Link to="/admin" className="hidden sm:block text-xs font-semibold text-primary-300 hover:underline">
@@ -55,24 +58,24 @@ export default function AdminBookPreview() {
             />
           </div>
 
-          <div className="flex-1 space-y-5 md:space-y-6 text-start md:text-left">
+          <div className="flex-1 space-y-4  text-start md:text-left">
             <div className="space-y-3">
-              <span className="inline-flex items-center rounded border border-neutral-300 bg-neutral-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-700">
+              <span className="inline-flex items-center rounded border border-neutral-300 bg-neutral-50 px-3 py-0 text-xs font-semibold uppercase tracking-wide text-neutral-700">
                 {primaryCategory}
               </span>
-              <h2 className="text-xl sm:text-2xl md:text-[32px] font-bold text-neutral-950">
+              <h2 className="text-xl sm:text-2xl md:text-[32px] font-bold text-foreground">
                 {book.title}
               </h2>
-              <p className="text-sm sm:text-base font-medium text-neutral-600">
+              <p className="text-sm sm:text-base font-medium text-foreground">
                 {book.author?.name ?? "Unknown Author"}
               </p>
-              <div className="flex items-center gap-2 text-sm font-bold text-neutral-900">
-                <img src="/star.svg" alt="Rating" className="h-5 w-5" />
+              <div className="flex items-center gap-2 text-sm sm:text-md font-bold text-foreground">
+                <img src="/star.svg" alt="Rating" className="size-6 " />
                 {rating}
               </div>
             </div>
 
-            <div className="grid w-full md:max-w-[70%] grid-cols-3 divide-x divide-neutral-200 border border-neutral-200 rounded-2xl bg-neutral-25">
+            <div className="grid w-full md:max-w-[70%] grid-cols-3 divide-x divide-neutral-200  rounded-2xl text-foreground">
               <StatCard label="Page" value={totalCopies} />
               <StatCard label="Rating" value={rating} />
               <StatCard label="Reviews" value={reviewCount} />
@@ -83,25 +86,25 @@ export default function AdminBookPreview() {
             </div>
 
             <Section title="Description">
-              <p className="text-sm sm:text-base font-medium leading-6 text-neutral-700 line-clamp-6">
+              <p className="text-sm sm:text-base font-medium leading-6 text-foreground line-clamp-3">
                 {book.description || "This book does not yet include a description."}
               </p>
             </Section>
 
-            <Section title="Details" className="grid gap-2 text-sm sm:text-base text-neutral-700">
+            {/* <Section title="Details" className="grid gap-2 text-sm sm:text-base text-foreground">
               <Detail label="ISBN" value={isbn ?? "N/A"} />
               <Detail label="Published" value={publishedYear ?? "N/A"} />
               <Detail label="Times Borrowed" value={borrowCount} />
               <Detail label="Available Copies" value={book.stock ?? 0} />
-            </Section>
+            </Section> */}
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Button
                 variant="outline"
-                onClick={() => navigate(`/books/${book.id}`)}
+                onClick={() => dispatch(add({ bookId: book.id, title: book.title, coverUrl: book.coverUrl }))}
                 className="rounded-full h-10 sm:h-12 px-6 sm:px-8 text-sm sm:text-md font-semibold border-neutral-300"
               >
-                <ExternalLink className="mr-2 size-4" /> View Public Page
+                <ExternalLink className="mr-2 size-4" /> Add to Cart
               </Button>
               <Button
                 onClick={() => navigate(`/admin/book/${book.id}/edit`)}
@@ -127,7 +130,7 @@ export default function AdminBookPreview() {
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="px-4 py-3 text-left">
-      <div className="text-lg sm:text-display-xs font-bold text-neutral-950">{value}</div>
+      <div className="text-lg sm:text-display-xs font-bold text-foreground">{value}</div>
       <div className="text-xs sm:text-sm font-medium text-neutral-600 mt-1 uppercase tracking-wide">
         {label}
       </div>
@@ -144,11 +147,11 @@ function Section({ title, children, className }: { title: string; children: Reac
   );
 }
 
-function Detail({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="flex items-center gap-3 text-sm sm:text-base font-medium">
-      <span className="text-neutral-500 min-w-[120px]">{label}</span>
-      <span className="text-neutral-900">{value}</span>
-    </div>
-  );
-}
+// function Detail({ label, value }: { label: string; value: string | number }) {
+//   return (
+//     <div className="flex items-center gap-3 text-sm sm:text-base font-medium">
+//       <span className="text-neutral-500 min-w-[120px]">{label}</span>
+//       <span className="text-foreground">{value}</span>
+//     </div>
+//   );
+// }

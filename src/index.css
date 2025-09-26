@@ -126,7 +126,7 @@
 
   /* Core tokens (light) mapped to custom palette */
   --background: var(--color-base-white);
-  --foreground: var(--color-neutral-900);
+  --foreground: var(--color-neutral-950);
   --card: var(--color-base-white);
   --card-foreground: var(--color-neutral-900);
   --popover: var(--color-base-white);

@@ -73,12 +73,12 @@ export default function AdminBookList() {
         <SearchIcon className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-5 text-neutral-600' />
       </div>
       
-      <div className="flex space-x-2 mb-4 sm:mb-6 mt-6 overflow-auto dark:text-background">
+      <div className="flex space-x-2 mb-4 sm:mb-6 mt-6 overflow-auto text-foreground bg-background ">
         {["All", "Available", "Borrowed", "Returned", "Damaged"].map((filter) => (
           <button
             key={filter}
             className={`px-4 py-1 h-10 sm:text-md font-bold rounded-full text-sm ${
-              activeFilter === filter ? "bg-primary-100 text-primary-300 border-primary-300 border"  : "bg-gray-100"
+              activeFilter === filter ? "bg-primary-100 text-primary-300 border-primary-300 border"  : "bg-background border dark:border-border"
             }`}
             onClick={() => setActiveFilter(filter)}
           >
@@ -128,7 +128,7 @@ export default function AdminBookList() {
                         variant="outline2" 
                         size="sm"
                         onClick={() => navigate(`/admin/book/${book.id}`)}
-                        className="rounded-full h-12 w-[95px] font-bold sm:text-md"
+                        className="rounded-full h-12 w-[95px] font-bold sm:text-md bg-transparent"
                       >
                         Preview
                       </Button>
@@ -144,7 +144,7 @@ export default function AdminBookList() {
                         variant="destructive" 
                         size="sm"
                         onClick={() => handleDeleteClick({ id: Number(book.id), title: book.title })}
-                        className="rounded-full h-12 w-[95px] font-bold sm:text-md"
+                        className="rounded-full h-12 w-[95px] !bg-background font-bold sm:text-md"
                       >
                         Delete
                       </Button>
