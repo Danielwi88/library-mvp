@@ -74,7 +74,7 @@ export function ProfileTab() {
       <h1 className="text-xl font-semibold">Profile</h1>
       
       {profileQuery.isLoading ? (
-        <div className="flex justify-center py-8 ">
+        <div className="flex justify-center py-8">
           <img src="/avatarfall.png" alt="avatarfall" />
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
@@ -91,7 +91,7 @@ export function ProfileTab() {
         </div>
       ) : (
         <>
-          <div className="flex flex-col  mb-8  shadow-custom p-5 rounded-2xl ">
+          <div className="flex flex-col mb-8 shadow-custom p-5 rounded-2xl w-full min-w-0 sm:max-w-[557px]">
             <Avatar className="w-16 h-16 mb-4">
               <AvatarFallback className="bg-blue-600 text-white items-start text-xl">
                 <img src="/avatarfall.png" alt="avatar" width='64' height='64'  />
@@ -99,7 +99,7 @@ export function ProfileTab() {
             </Avatar>
             
             {isEditing ? (
-              <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-[557px]">
+              <form onSubmit={handleSubmit} className="space-y-4 w-full sm:max-w-[557px] ">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input 

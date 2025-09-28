@@ -69,7 +69,7 @@ export function Nav() {
   const [mobileSearch, setMobileSearch] = useState(false);
 
   return (
-    <header className='sticky top-0 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex flex-col md:flex-row items-stretch md:items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)] min-h-16 sm:min-h-20'>
+    <header className='sticky top-0 z-30 bg-white/90 dark:bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-white/95 flex flex-col md:flex-row items-stretch md:items-center border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)] justify-center min-h-16 sm:min-h-20'>
       <div className='container mx-auto max-w-[1200px] px-3 sm:px-0 flex items-center gap-3'>
         {/* Left: brand */}
         <Link
@@ -161,7 +161,7 @@ export function Nav() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align='end'
-                  className='w-screen sm:w-[200px] py-4 sm:bg-white sm:dark:bg-background bg-black/50 backdrop-blur-sm '
+                  className='w-screen sm:w-[200px] py-4 bg-white sm:dark:bg-background  backdrop-blur-sm '
                 >
                   <DropdownMenuItem
                     onClick={() => nav('/me/loans?tab=profile')}
@@ -230,7 +230,7 @@ export function Nav() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align='end'
-                  className='w-screen sm:w-auto py-5 px-6 sm:bg-white sm:dark:bg-background bg-black/50 backdrop-blur-sm'
+                  className='w-screen sm:w-auto py-5 px-6 bg-white/50 sm:dark:bg-background  backdrop-blur-sm '
                 >
                   <div className='flex items-center gap-3'>
                     <Button
