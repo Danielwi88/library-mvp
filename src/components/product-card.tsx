@@ -10,8 +10,8 @@ type Props = {
   authorId?: string | number;
   coverUrl?: string | null;
   rating?: number;
-  index?: number; // retained for backwards compatibility
-  compact?: boolean; // tighter padding for sidebars/related
+  index?: number; 
+  compact?: boolean; 
   showDetailButton?: boolean;
   className?: string;
 };
@@ -38,12 +38,12 @@ export function ProductCard({
       className={`rounded-t-xl overflow-hidden border-none shadow-[0_0_20px_0_rgba(203,202,202,0.25)]  bg-white dark:bg-background block ${className}`}
     >
       <Card className='rounded-2xl overflow-hidden'>
-        <CardContent className='p-0'>
+        <CardContent className='p-0 max-h-[370px] xs:max-h-[459px] xm:max-h-[468px] '>
           <CoverImage
             src={coverUrl}
             alt={title}
             index={index}
-            className='w-full h-[336px] max-h-[336px] object-cover'
+            className='w-full h-[258px] xs:h-[299px] xm:h-[329px] sm:h-[336px] max-h-[312px] xm:max-h-[330px] sm:max-h-[336px] object-cover'
           />
           <div className={infoPad}>
             <div
@@ -68,7 +68,7 @@ export function ProductCard({
                 authorName
               )}
             </div>
-            <div className='flex items-center justify-between mt-2'>
+            <div className='flex items-center justify-between sm:mt-2'>
               <span className='inline-flex items-center gap-1 text-sm sm:text-md '>
                 <img
                   src='/star.svg'

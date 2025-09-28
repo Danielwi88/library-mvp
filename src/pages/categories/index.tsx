@@ -192,7 +192,7 @@ export default function CategoriesPage() {
               No books found matching your filters
             </p>
           ) : (
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
+            <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 xm:gap-5'>
               {filteredBooks.map((book, index) => (
                 <ProductCard
                   key={book.id}

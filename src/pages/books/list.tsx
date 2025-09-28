@@ -67,7 +67,7 @@ export default function BookList() {
 
       <h3 className='text-display-xs sm:text-display-lg font-bold mb-10 mt-12 text-neutral-950 dark:text-foreground'>Recommendation</h3>
 
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 '>
+      <div className='grid grid-cols-2 xm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 '>
         {data?.items?.map((b, i) => (
           <ProductCard
             key={b.id}
